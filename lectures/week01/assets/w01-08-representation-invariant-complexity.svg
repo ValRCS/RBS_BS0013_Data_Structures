@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="680" viewBox="0 0 1400 680" role="img" aria-labelledby="title desc">
+  <title id="title">Representation, invariant, and complexity</title>
+  <desc id="desc">A representation choice creates two obligations: preserve invariants so the state remains correct, and understand the time and space costs of operations so the design fits the workload.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#555"/>
+    </marker>
+    <style>
+      .primary { fill: #f8e9e9; stroke: #c93636; stroke-width: 3; rx: 20; }
+      .card { fill: #ffffff; stroke: #343434; stroke-width: 2.5; rx: 20; }
+      .result { fill: #fbfaf8; stroke: #888; stroke-width: 2.5; rx: 20; }
+      .edge { fill: none; stroke: #555; stroke-width: 3; marker-end: url(#arrow); }
+      .heading { font: 700 35px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .label { font: 700 29px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #4b4b52; text-anchor: middle; }
+      .accent { font: 700 23px Arial, Helvetica, sans-serif; fill: #c93636; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="primary" x="445" y="40" width="510" height="155"/>
+  <text class="heading" x="700" y="91">Representation choice</text>
+  <text class="body" x="700" y="132">contiguous · linked · tree-shaped · hashed · …</text>
+  <text class="accent" x="700" y="170">the concrete state we choose to maintain</text>
+
+  <path class="edge" d="M575 195 C520 245 430 265 350 295"/>
+  <path class="edge" d="M825 195 C880 245 970 265 1050 295"/>
+
+  <rect class="card" x="95" y="295" width="510" height="220"/>
+  <text class="label" x="350" y="345">Invariant</text>
+  <text class="accent" x="350" y="384">What must always remain true?</text>
+  <text class="body" x="350" y="430">valid links · correct ordering</text>
+  <text class="body" x="350" y="465">consistent size · reachable elements</text>
+  <text class="body" x="350" y="500">→ correctness obligation</text>
+
+  <rect class="card" x="795" y="295" width="510" height="220"/>
+  <text class="label" x="1050" y="345">Complexity profile</text>
+  <text class="accent" x="1050" y="384">What do operations cost?</text>
+  <text class="body" x="1050" y="430">time · auxiliary memory</text>
+  <text class="body" x="1050" y="465">allocations · locality · resizing</text>
+  <text class="body" x="1050" y="500">→ workload-fit obligation</text>
+
+  <path class="edge" d="M350 515 C430 555 520 560 610 575"/>
+  <path class="edge" d="M1050 515 C970 555 880 560 790 575"/>
+
+  <rect class="result" x="480" y="560" width="440" height="90"/>
+  <text class="label" x="700" y="600">A sound implementation</text>
+  <text class="body" x="700" y="632">valid state + acceptable cost</text>
+</svg>

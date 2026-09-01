@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Cloudflare DNS cache representation trade-offs</title>
+  <desc id="desc">Cloudflare reduced measured memory per DNS cache entry from 953 bytes to 420 bytes, freeing about 100 terabytes of RAM while increasing insertion throughput by 43 percent and reducing lookup latency by 19 percent.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#c93636"/>
+    </marker>
+    <style>
+      .panel { fill: #fbfaf8; stroke: #d1d1d1; stroke-width: 2; rx: 24; }
+      .metric { fill: #ffffff; stroke: #7a7a7a; stroke-width: 2; rx: 18; }
+      .accent { fill: #f8e9e9; stroke: #c93636; stroke-width: 2.5; rx: 18; }
+      .arrow { fill: none; stroke: #c93636; stroke-width: 5; marker-end: url(#arrow); }
+      .title { font: 700 37px Arial, Helvetica, sans-serif; fill: #202020; }
+      .context { font: 24px Arial, Helvetica, sans-serif; fill: #555; }
+      .number { font: 700 70px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .unit { font: 700 27px Arial, Helvetica, sans-serif; fill: #555; text-anchor: middle; }
+      .delta { font: 700 54px Arial, Helvetica, sans-serif; fill: #c93636; text-anchor: middle; }
+      .label { font: 700 25px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #3f3f46; text-anchor: middle; }
+      .small { font: 18px Arial, Helvetica, sans-serif; fill: #666; }
+    </style>
+  </defs>
+
+  <text class="title" x="55" y="62">Same logical DNS records. A better in-memory representation.</text>
+  <text class="context" x="55" y="101">Measured at more than 250 billion cache entries</text>
+
+  <rect class="panel" x="45" y="145" width="850" height="415"/>
+  <text class="label" x="470" y="196">Measured memory per cache entry</text>
+
+  <rect class="metric" x="105" y="245" width="260" height="205"/>
+  <text class="number" x="235" y="340">953</text>
+  <text class="unit" x="235" y="386">bytes / entry</text>
+  <text class="body" x="235" y="425">before</text>
+
+  <path class="arrow" d="M405 348 L575 348"/>
+  <text class="delta" x="490" y="310">−56%</text>
+
+  <rect class="accent" x="615" y="245" width="220" height="205"/>
+  <text class="number" x="725" y="340">420</text>
+  <text class="unit" x="725" y="386">bytes / entry</text>
+  <text class="body" x="725" y="425">after</text>
+
+  <rect class="accent" x="945" y="145" width="410" height="125"/>
+  <text class="delta" x="1150" y="215">≈100 TB</text>
+  <text class="label" x="1150" y="250">RAM freed</text>
+
+  <rect class="metric" x="945" y="300" width="190" height="180"/>
+  <text class="delta" x="1040" y="378">+43%</text>
+  <text class="label" x="1040" y="423">insertion</text>
+  <text class="body" x="1040" y="454">throughput</text>
+
+  <rect class="metric" x="1165" y="300" width="190" height="180"/>
+  <text class="delta" x="1260" y="378">−19%</text>
+  <text class="label" x="1260" y="423">lookup</text>
+  <text class="body" x="1260" y="454">latency</text>
+
+  <rect class="panel" x="170" y="610" width="1060" height="92"/>
+  <text class="label" x="700" y="650">What changed?</text>
+  <text class="body" x="700" y="683">capacity metadata · allocation count · pointer count · packing · locality</text>
+
+  <text class="small" x="1340" y="742" text-anchor="end">Source: Cloudflare Engineering, 27 Aug 2026</text>
+</svg>

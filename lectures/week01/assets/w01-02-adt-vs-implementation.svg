@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">ADT versus concrete data-structure implementation</title>
+  <desc id="desc">Client code uses an abstract data type contract. A concrete representation implements that contract, must preserve invariants, and determines operation costs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#4b5563"/>
+    </marker>
+    <style>
+      .outer { fill: #fbfaf8; stroke: #252525; stroke-width: 2.5; rx: 24; }
+      .card { fill: #ffffff; stroke: #7a7a7a; stroke-width: 2; rx: 16; }
+      .accent { fill: #f8e9e9; stroke: #c93636; stroke-width: 2.5; rx: 16; }
+      .edge { fill: none; stroke: #4b5563; stroke-width: 3; marker-end: url(#arrow); }
+      .dashed { stroke-dasharray: 10 8; }
+      .heading { font: 700 34px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .label { font: 700 27px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #3f3f46; text-anchor: middle; }
+      .small { font: 20px Arial, Helvetica, sans-serif; fill: #5b5b63; text-anchor: middle; }
+      .edge-label { font: 700 20px Arial, Helvetica, sans-serif; fill: #c93636; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="accent" x="35" y="305" width="255" height="130"/>
+  <text class="label" x="162" y="352">Client code</text>
+  <text class="body" x="162" y="389">uses the public</text>
+  <text class="body" x="162" y="419">contract</text>
+
+  <rect class="outer" x="360" y="60" width="410" height="640"/>
+  <text class="heading" x="565" y="112">ADT</text>
+  <text class="small" x="565" y="146">what the structure promises</text>
+
+  <rect class="card" x="405" y="205" width="320" height="175"/>
+  <text class="label" x="565" y="245">Public interface</text>
+  <text class="body" x="565" y="286">insert · remove · find</text>
+  <text class="body" x="565" y="320">size · traversal · …</text>
+  <text class="small" x="565" y="352">observable behaviour</text>
+
+  <rect class="card" x="405" y="450" width="320" height="160"/>
+  <text class="label" x="565" y="493">Abstract state</text>
+  <text class="body" x="565" y="534">what the structure</text>
+  <text class="body" x="565" y="565">logically contains</text>
+
+  <rect class="outer" x="865" y="60" width="500" height="640"/>
+  <text class="heading" x="1115" y="112">Implementation</text>
+  <text class="small" x="1115" y="146">how the promise is achieved</text>
+
+  <rect class="accent" x="920" y="190" width="390" height="145"/>
+  <text class="label" x="1115" y="233">Representation</text>
+  <text class="body" x="1115" y="274">array · linked nodes</text>
+  <text class="body" x="1115" y="307">tree · hash table · …</text>
+
+  <rect class="card" x="920" y="405" width="180" height="165"/>
+  <text class="label" x="1010" y="447">Invariants</text>
+  <text class="body" x="1010" y="489">valid links</text>
+  <text class="body" x="1010" y="521">ordering</text>
+  <text class="small" x="1010" y="550">correctness</text>
+
+  <rect class="card" x="1130" y="405" width="180" height="165"/>
+  <text class="label" x="1220" y="447">Costs</text>
+  <text class="body" x="1220" y="489">time</text>
+  <text class="body" x="1220" y="521">space</text>
+  <text class="small" x="1220" y="550">complexity</text>
+
+  <path class="edge" d="M290 370 L405 292"/>
+  <path class="edge dashed" d="M725 292 L920 260"/>
+  <text class="edge-label" x="823" y="250">implemented by</text>
+  <path class="edge" d="M1115 335 L1010 405"/>
+  <path class="edge" d="M1115 335 L1220 405"/>
+</svg>

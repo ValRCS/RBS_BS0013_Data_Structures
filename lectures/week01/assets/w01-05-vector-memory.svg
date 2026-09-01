@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="650" viewBox="0 0 1400 650" role="img" aria-labelledby="title desc">
+  <title id="title">std::vector as contiguous memory</title>
+  <desc id="desc">Four integer vector elements occupy consecutive fixed-size memory cells. The address of an indexed element is calculated from the base address plus the index multiplied by the element size.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#c93636"/>
+    </marker>
+    <style>
+      .cell { fill: #ffffff; stroke: #252525; stroke-width: 3; }
+      .highlight { fill: #f8e9e9; stroke: #c93636; stroke-width: 3; }
+      .brace { fill: none; stroke: #555; stroke-width: 2.5; }
+      .arrow { fill: none; stroke: #c93636; stroke-width: 3; marker-end: url(#arrow); }
+      .code { font: 700 30px "DejaVu Sans Mono", monospace; fill: #202020; }
+      .index { font: 700 25px Arial, Helvetica, sans-serif; fill: #555; text-anchor: middle; }
+      .value { font: 700 44px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .address { font: 20px "DejaVu Sans Mono", monospace; fill: #666; text-anchor: middle; }
+      .label { font: 700 27px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #4b4b52; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <text class="code" x="70" y="70">std::vector&lt;int&gt; values{10, 20, 30, 40};</text>
+
+  <text class="index" x="370" y="175">index 0</text>
+  <text class="index" x="590" y="175">index 1</text>
+  <text class="index" x="810" y="175">index 2</text>
+  <text class="index" x="1030" y="175">index 3</text>
+
+  <rect class="cell" x="260" y="205" width="220" height="145"/>
+  <rect class="cell" x="480" y="205" width="220" height="145"/>
+  <rect class="highlight" x="700" y="205" width="220" height="145"/>
+  <rect class="cell" x="920" y="205" width="220" height="145"/>
+
+  <text class="value" x="370" y="292">10</text>
+  <text class="value" x="590" y="292">20</text>
+  <text class="value" x="810" y="292">30</text>
+  <text class="value" x="1030" y="292">40</text>
+
+  <text class="address" x="370" y="390">base + 0 × s</text>
+  <text class="address" x="590" y="390">base + 1 × s</text>
+  <text class="address" x="810" y="390">base + 2 × s</text>
+  <text class="address" x="1030" y="390">base + 3 × s</text>
+
+  <path class="brace" d="M260 445 L260 470 L1140 470 L1140 445"/>
+  <text class="label" x="700" y="510">one contiguous storage region</text>
+  <text class="body" x="700" y="548">equal-sized elements sit directly next to one another</text>
+
+  <path class="arrow" d="M1230 520 C1160 500 1050 470 820 405"/>
+  <text class="label" x="1150" y="575">Direct indexed access</text>
+  <text class="body" x="1150" y="607">address = base + i × sizeof(int)</text>
+</svg>

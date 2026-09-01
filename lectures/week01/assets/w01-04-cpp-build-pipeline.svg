@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="620" viewBox="0 0 1400 620" role="img" aria-labelledby="title desc">
+  <title id="title">C++ build pipeline</title>
+  <desc id="desc">A C++ source file is translated by the compiler into object code, combined by the linker with required libraries, and turned into an executable. Compile-time, link-time, runtime, and logical errors occur at different stages.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#555"/>
+    </marker>
+    <style>
+      .stage { fill: #ffffff; stroke: #303030; stroke-width: 2.5; rx: 18; }
+      .tool { fill: #f8e9e9; stroke: #c93636; stroke-width: 2.5; rx: 18; }
+      .edge { fill: none; stroke: #555; stroke-width: 3; marker-end: url(#arrow); }
+      .heading { font: 700 31px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #4b4b52; text-anchor: middle; }
+      .edge-label { font: 20px Arial, Helvetica, sans-serif; fill: #666; text-anchor: middle; }
+      .error { font: 700 20px Arial, Helvetica, sans-serif; fill: #c93636; text-anchor: middle; }
+      .small { font: 19px Arial, Helvetica, sans-serif; fill: #555; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="stage" x="45" y="175" width="220" height="145"/>
+  <text class="heading" x="155" y="232">main.cpp</text>
+  <text class="body" x="155" y="275">source code</text>
+
+  <rect class="tool" x="330" y="175" width="220" height="145"/>
+  <text class="heading" x="440" y="232">Compiler</text>
+  <text class="body" x="440" y="275">translate + check</text>
+
+  <rect class="stage" x="615" y="175" width="220" height="145"/>
+  <text class="heading" x="725" y="232">main.o</text>
+  <text class="body" x="725" y="275">object code</text>
+
+  <rect class="tool" x="900" y="175" width="220" height="145"/>
+  <text class="heading" x="1010" y="232">Linker</text>
+  <text class="body" x="1010" y="275">combine pieces</text>
+
+  <rect class="stage" x="1185" y="175" width="170" height="145"/>
+  <text class="heading" x="1270" y="232">main</text>
+  <text class="body" x="1270" y="275">executable</text>
+
+  <path class="edge" d="M265 247 L330 247"/>
+  <path class="edge" d="M550 247 L615 247"/>
+  <path class="edge" d="M835 247 L900 247"/>
+  <path class="edge" d="M1120 247 L1185 247"/>
+
+  <text class="edge-label" x="297" y="225">compile</text>
+  <text class="edge-label" x="867" y="225">link</text>
+
+  <line x1="440" y1="320" x2="440" y2="405" stroke="#c93636" stroke-width="2"/>
+  <text class="error" x="440" y="445">compile-time errors</text>
+  <text class="small" x="440" y="477">syntax · types · undeclared names</text>
+
+  <line x1="1010" y1="320" x2="1010" y2="405" stroke="#c93636" stroke-width="2"/>
+  <text class="error" x="1010" y="445">link-time errors</text>
+  <text class="small" x="1010" y="477">missing definitions</text>
+
+  <line x1="1270" y1="320" x2="1270" y2="405" stroke="#c93636" stroke-width="2"/>
+  <text class="error" x="1270" y="445">runtime / logical</text>
+  <text class="small" x="1270" y="477">crash or wrong result</text>
+</svg>

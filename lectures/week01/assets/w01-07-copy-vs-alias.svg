@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Value semantics versus explicit aliasing</title>
+  <desc id="desc">Copying a C++ vector creates two independent vector objects. Binding a reference creates two names for one vector object, so a mutation through either name changes the same object.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#555"/>
+    </marker>
+    <style>
+      .panel { fill: #fbfaf8; stroke: #b8b8b8; stroke-width: 2.5; rx: 24; }
+      .cell { fill: #ffffff; stroke: #252525; stroke-width: 2.5; }
+      .changed { fill: #f8e9e9; stroke: #c93636; stroke-width: 2.5; }
+      .edge { fill: none; stroke: #555; stroke-width: 3; marker-end: url(#arrow); }
+      .alias { fill: none; stroke: #c93636; stroke-width: 4; marker-end: url(#arrow); }
+      .heading { font: 700 34px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .code { font: 24px "DejaVu Sans Mono", monospace; fill: #202020; text-anchor: middle; }
+      .name { font: 700 27px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .value { font: 700 30px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #4b4b52; text-anchor: middle; }
+      .result { font: 700 25px Arial, Helvetica, sans-serif; fill: #c93636; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="panel" x="35" y="35" width="650" height="690"/>
+  <text class="heading" x="360" y="92">Value copy</text>
+  <text class="code" x="360" y="134">auto b = a;</text>
+  <text class="body" x="360" y="170">a new vector object is created</text>
+
+  <text class="name" x="115" y="245">a</text>
+  <path class="edge" d="M145 238 L205 238"/>
+  <rect class="cell" x="210" y="205" width="105" height="75"/>
+  <rect class="cell" x="315" y="205" width="105" height="75"/>
+  <rect class="cell" x="420" y="205" width="105" height="75"/>
+  <text class="value" x="262" y="254">10</text>
+  <text class="value" x="367" y="254">20</text>
+  <text class="value" x="472" y="254">30</text>
+
+  <text class="name" x="115" y="380">b</text>
+  <path class="edge" d="M145 373 L205 373"/>
+  <rect class="cell" x="210" y="340" width="105" height="75"/>
+  <rect class="cell" x="315" y="340" width="105" height="75"/>
+  <rect class="cell" x="420" y="340" width="105" height="75"/>
+  <text class="value" x="262" y="389">10</text>
+  <text class="value" x="367" y="389">20</text>
+  <text class="value" x="472" y="389">30</text>
+
+  <text class="code" x="360" y="485">b[0] = 99;</text>
+  <rect class="changed" x="210" y="520" width="105" height="75"/>
+  <rect class="cell" x="315" y="520" width="105" height="75"/>
+  <rect class="cell" x="420" y="520" width="105" height="75"/>
+  <text class="value" x="262" y="569">99</text>
+  <text class="value" x="367" y="569">20</text>
+  <text class="value" x="472" y="569">30</text>
+  <text class="result" x="360" y="640">b changes; a remains [10, 20, 30]</text>
+  <text class="body" x="360" y="679">independent values</text>
+
+  <rect class="panel" x="715" y="35" width="650" height="690"/>
+  <text class="heading" x="1040" y="92">Explicit alias</text>
+  <text class="code" x="1040" y="134">auto&amp; b = a;</text>
+  <text class="body" x="1040" y="170">no new vector object is created</text>
+
+  <text class="name" x="840" y="280">a</text>
+  <text class="name" x="840" y="390">b</text>
+  <path class="alias" d="M870 273 C915 280 940 305 980 330"/>
+  <path class="alias" d="M870 383 C915 375 940 350 980 338"/>
+
+  <rect class="cell" x="990" y="295" width="105" height="85"/>
+  <rect class="cell" x="1095" y="295" width="105" height="85"/>
+  <rect class="cell" x="1200" y="295" width="105" height="85"/>
+  <text class="value" x="1042" y="350">10</text>
+  <text class="value" x="1147" y="350">20</text>
+  <text class="value" x="1252" y="350">30</text>
+
+  <text class="code" x="1040" y="485">b[0] = 99;</text>
+  <rect class="changed" x="885" y="520" width="105" height="85"/>
+  <rect class="cell" x="990" y="520" width="105" height="85"/>
+  <rect class="cell" x="1095" y="520" width="105" height="85"/>
+  <text class="value" x="937" y="575">99</text>
+  <text class="value" x="1042" y="575">20</text>
+  <text class="value" x="1147" y="575">30</text>
+  <text class="result" x="1040" y="640">a and b both observe [99, 20, 30]</text>
+  <text class="body" x="1040" y="679">two names, one object</text>
+</svg>

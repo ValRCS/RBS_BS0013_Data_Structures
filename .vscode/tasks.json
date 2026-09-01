@@ -1,0 +1,78 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "C++: compile active file",
+      "type": "process",
+      "command": "bash",
+      "args": [
+        "-lc",
+        "mkdir -p \"${workspaceFolder}/labs/week01/build/manual\" && g++ -std=c++20 -g -Wall -Wextra -Wpedantic \"${file}\" -o \"${workspaceFolder}/labs/week01/build/manual/${fileBasenameNoExtension}\""
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/labs/week01"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "CMake: configure Week 1",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "-S",
+        "labs/week01",
+        "-B",
+        "labs/week01/build",
+        "-DCMAKE_BUILD_TYPE=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "CMake: build Week 1 starter targets",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "labs/week01/build",
+        "--parallel",
+        "2"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "CMake: configure Week 1",
+      "dependsOrder": "sequence",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "CMake: build Week 1 broken exercise",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "labs/week01/build",
+        "--target",
+        "broken"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "CMake: configure Week 1",
+      "dependsOrder": "sequence",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    }
+  ]
+}

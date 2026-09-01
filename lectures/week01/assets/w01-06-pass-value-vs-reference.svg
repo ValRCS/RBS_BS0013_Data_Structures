@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Pass by value versus pass by reference</title>
+  <desc id="desc">Pass by value creates a separate function-local object, so changing it leaves the caller's object unchanged. Pass by reference creates an alias to the caller's existing object, so mutation is visible to the caller.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,8 L11,4 z" fill="#555"/>
+    </marker>
+    <style>
+      .panel { fill: #fbfaf8; stroke: #b8b8b8; stroke-width: 2.5; rx: 24; }
+      .object { fill: #ffffff; stroke: #252525; stroke-width: 3; rx: 16; }
+      .mutated { fill: #f8e9e9; stroke: #c93636; stroke-width: 3; rx: 16; }
+      .edge { fill: none; stroke: #555; stroke-width: 3; marker-end: url(#arrow); }
+      .alias { fill: none; stroke: #c93636; stroke-width: 4; marker-end: url(#arrow); }
+      .heading { font: 700 34px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .code { font: 24px "DejaVu Sans Mono", monospace; fill: #202020; text-anchor: middle; }
+      .name { font: 700 26px Arial, Helvetica, sans-serif; fill: #555; text-anchor: middle; }
+      .value { font: 700 48px Arial, Helvetica, sans-serif; fill: #202020; text-anchor: middle; }
+      .body { font: 23px Arial, Helvetica, sans-serif; fill: #4b4b52; text-anchor: middle; }
+      .result { font: 700 26px Arial, Helvetica, sans-serif; fill: #c93636; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect class="panel" x="40" y="40" width="640" height="670"/>
+  <text class="heading" x="360" y="95">Pass by value</text>
+  <text class="code" x="360" y="137">void increment(int x)</text>
+
+  <text class="name" x="205" y="210">caller: value</text>
+  <rect class="object" x="115" y="235" width="180" height="120"/>
+  <text class="value" x="205" y="310">10</text>
+
+  <path class="edge" d="M295 295 L425 295"/>
+  <text class="body" x="360" y="270">copy</text>
+
+  <text class="name" x="515" y="210">function: x</text>
+  <rect class="object" x="425" y="235" width="180" height="120"/>
+  <text class="value" x="515" y="310">10</text>
+
+  <path class="edge" d="M515 355 L515 445"/>
+  <text class="code" x="515" y="405">++x</text>
+  <rect class="mutated" x="425" y="455" width="180" height="120"/>
+  <text class="value" x="515" y="530">11</text>
+
+  <rect class="object" x="115" y="455" width="180" height="120"/>
+  <text class="value" x="205" y="530">10</text>
+  <text class="result" x="360" y="630">caller remains 10</text>
+  <text class="body" x="360" y="666">two distinct objects</text>
+
+  <rect class="panel" x="720" y="40" width="640" height="670"/>
+  <text class="heading" x="1040" y="95">Pass by reference</text>
+  <text class="code" x="1040" y="137">void increment(int&amp; x)</text>
+
+  <text class="name" x="875" y="210">caller name: value</text>
+  <text class="name" x="1205" y="210">function name: x</text>
+
+  <path class="alias" d="M875 225 C900 270 955 300 1025 320"/>
+  <path class="alias" d="M1205 225 C1180 270 1125 300 1055 320"/>
+
+  <rect class="object" x="950" y="320" width="180" height="120"/>
+  <text class="value" x="1040" y="395">10</text>
+  <text class="body" x="1040" y="475">both names denote this object</text>
+
+  <path class="edge" d="M1040 490 L1040 555"/>
+  <text class="code" x="1130" y="535">++x</text>
+  <rect class="mutated" x="950" y="565" width="180" height="100"/>
+  <text class="value" x="1040" y="630">11</text>
+  <text class="result" x="1040" y="690">caller now observes 11</text>
+</svg>

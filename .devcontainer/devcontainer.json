@@ -1,0 +1,21 @@
+{
+  "name": "BS0013 Data Structures — C++20",
+  "image": "mcr.microsoft.com/devcontainers/cpp:3-noble",
+  "hostRequirements": {
+    "cpus": 2
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools"
+      ],
+      "settings": {
+        "C_Cpp.default.cppStandard": "c++20",
+        "C_Cpp.default.compilerPath": "/usr/bin/g++"
+      }
+    }
+  },
+  "postCreateCommand": "bash scripts/check-environment.sh",
+  "remoteUser": "vscode"
+}

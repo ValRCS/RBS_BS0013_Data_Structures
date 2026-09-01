@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">Four questions to carry into the course</title>
+  <desc id="desc">For every data structure ask what it promises, how it is represented, what the representation costs, and who owns the objects and how long they live.</desc>
+  <style>
+    .banner { fill: #252525; rx: 22; }
+    .card { fill: #fbfaf8; stroke: #8c8c8c; stroke-width: 2.5; rx: 22; }
+    .number { fill: #c93636; }
+    .banner-text { font: 700 35px Arial, Helvetica, sans-serif; fill: #ffffff; text-anchor: middle; }
+    .num-text { font: 700 30px Arial, Helvetica, sans-serif; fill: #ffffff; text-anchor: middle; }
+    .question { font: 700 30px Arial, Helvetica, sans-serif; fill: #202020; }
+    .answer { font: 24px Arial, Helvetica, sans-serif; fill: #555; }
+    .keyword { font: 700 22px Arial, Helvetica, sans-serif; fill: #c93636; }
+  </style>
+
+  <rect class="banner" x="190" y="35" width="1020" height="90"/>
+  <text class="banner-text" x="700" y="91">For every data structure, ask four questions</text>
+
+  <rect class="card" x="70" y="175" width="610" height="225"/>
+  <circle class="number" cx="130" cy="235" r="34"/>
+  <text class="num-text" x="130" y="245">1</text>
+  <text class="question" x="190" y="230">What does it promise?</text>
+  <text class="answer" x="120" y="285">Which operations and behaviours are public?</text>
+  <text class="keyword" x="120" y="345">ADT · interface · contract</text>
+
+  <rect class="card" x="720" y="175" width="610" height="225"/>
+  <circle class="number" cx="780" cy="235" r="34"/>
+  <text class="num-text" x="780" y="245">2</text>
+  <text class="question" x="840" y="230">How is it represented?</text>
+  <text class="answer" x="770" y="285">Where are objects stored and connected?</text>
+  <text class="keyword" x="770" y="345">layout · relationships · invariants</text>
+
+  <rect class="card" x="70" y="440" width="610" height="225"/>
+  <circle class="number" cx="130" cy="500" r="34"/>
+  <text class="num-text" x="130" y="510">3</text>
+  <text class="question" x="190" y="495">What does it cost?</text>
+  <text class="answer" x="120" y="550">Which operations and memory do we pay for?</text>
+  <text class="answer" x="120" y="582">Which constraints does the choice impose?</text>
+  <text class="keyword" x="120" y="630">time · space · practical performance</text>
+
+  <rect class="card" x="720" y="440" width="610" height="225"/>
+  <circle class="number" cx="780" cy="500" r="34"/>
+  <text class="num-text" x="780" y="510">4</text>
+  <text class="question" x="840" y="495">Who owns the objects?</text>
+  <text class="answer" x="770" y="550">How long do they live?</text>
+  <text class="answer" x="770" y="582">Which references remain valid?</text>
+  <text class="keyword" x="770" y="630">ownership · lifetime · validity</text>
+</svg>
