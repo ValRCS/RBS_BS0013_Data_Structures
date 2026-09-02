@@ -17,6 +17,7 @@ add_lab_target(value_reference src/value_reference.cpp)
 add_lab_target(vector_basics src/vector_basics.cpp)
 add_lab_target(copy_alias src/copy_alias.cpp)
 add_lab_target(sequence src/sequence.cpp)
+add_lab_target(bonus_week1 src/bonus-week1.cpp)
 
 # This target is intentionally excluded: broken.cpp is a compiler-diagnostics exercise.
 add_executable(broken EXCLUDE_FROM_ALL src/broken.cpp)
@@ -33,5 +34,6 @@ if(BUILD_TESTING)
     add_test(NAME starter_vector_basics_runs COMMAND vector_basics)
     add_test(NAME starter_copy_alias_runs COMMAND copy_alias)
     add_test(NAME starter_sequence_runs COMMAND sequence)
+    add_test(NAME starter_bonus_week1_runs COMMAND bonus_week1)
 endif()
 
