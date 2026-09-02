@@ -25,8 +25,17 @@ Then open `assignment.md` and complete it in order. The setup script checks GCC,
 | `src/vector_basics.cpp` | Basic `std::vector` modifications |
 | `src/copy_alias.cpp` | Copy-versus-alias prediction |
 | `src/sequence.cpp` | Main TODO-based mini-task |
+| `src/bonus-week1.cpp` | Optional stretch task: workload, representation, search, and sorted insertion |
 | `reflection.md` | Short conceptual answers |
 | `build/` | Generated executables; ignored by Git |
+
+## Optional bonus task
+
+If the core Week 1 practical is not challenging enough, work on `src/bonus-week1.cpp`.
+
+The bonus keeps the same Week 1 themes but goes further: compare two `std::vector` representations of the same records, implement linear and binary search, count comparisons, preserve a sorted invariant during insertion, and reason about the resulting complexity trade-offs.
+
+Do the search algorithms yourself rather than replacing the exercise with associative containers or standard-library search helpers.
 
 The terminal commands in `assignment.md` are authoritative. If you leave this folder, return with `cd labs/week01` before running the lab commands.
 
