@@ -12,7 +12,8 @@ Public student materials for **BS0013 Data Structures** at Riga Business School,
 - `labs/week03/` — Week 3 dynamic-array practical;
 - `labs/week04/` — Week 4 linked-structures practical;
 - `labs/week05/` — Week 5 circular-queue practical;
-- `labs/week06/` — Week 6 linear-probing hash-map practical.
+- `labs/week06/` — Week 6 linear-probing hash-map practical;
+- `labs/week08/` — Week 8 binary-heap / priority-queue practical.
 
 ## Use GitHub Codespaces
 
