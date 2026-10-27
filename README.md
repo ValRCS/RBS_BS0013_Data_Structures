@@ -5,7 +5,7 @@ Public student materials for **BS0013 Data Structures** at Riga Business School,
 ## Course materials
 
 - `syllabus/` — overall course syllabus;
-- `lectures/` — weekly lecture materials as released;
+- `lectures/` — weekly lecture reading as released (including Week 9 BSTs);
 - `quizzes/` — student self-check materials where published;
 - `labs/week01/` — Week 1 practical;
 - `labs/week02/` — Week 2 practical;
@@ -13,7 +13,8 @@ Public student materials for **BS0013 Data Structures** at Riga Business School,
 - `labs/week04/` — Week 4 linked-structures practical;
 - `labs/week05/` — Week 5 circular-queue practical;
 - `labs/week06/` — Week 6 linear-probing hash-map practical;
-- `labs/week08/` — Week 8 binary-heap / priority-queue practical.
+- `labs/week08/` — Week 8 binary-heap / priority-queue practical;
+- `labs/week09/` — Week 9 binary-search-tree practical.
 
 ## Use GitHub Codespaces
 
@@ -56,25 +57,27 @@ git push origin main
 
 A normal weekly update should merge cleanly because new material is usually added in new week folders. If Git reports a merge conflict, inspect `git status` and resolve the conflict before continuing; do not discard your previous lab work merely to obtain the update.
 
-## Current practical: Week 6
+## Current practical: Week 9
 
 After synchronizing your fork:
 
-```bash
-cd labs/week06
+~~~bash
+cd labs/week09
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
-```
-
-Then read `labs/week06/instructions.md` and `labs/week06/assignment.md`.
-
-The Week 6 starter compiles before the TODOs are completed. After implementing the hash map, run:
-
-```bash
 ctest --test-dir build --output-on-failure
-bash scripts/check-week06.sh
-```
+~~~
 
-The verification script also runs the public tests with AddressSanitizer and UndefinedBehaviorSanitizer enabled.
+Read labs/week09/instructions.md and labs/week09/assignment.md. The starter builds but deliberately fails tests until the BST TODOs are implemented.
 
-Instructor notes, solutions, answer keys, private tests, and assessment rationale are maintained separately and are not part of this public repository.
+After completing the implementation, verify with:
+
+~~~bash
+bash scripts/check-week09.sh
+~~~
+
+This runs public tests in normal and sanitizer configurations. Keep build/ and build-sanitize/ out of commits.
+
+## Week 9 lecture reading
+
+[Binary Search Trees](lectures/week09/lecture.md) provides the lecture's diagrams, invariant explanations, operation traces and complexity discussion.
