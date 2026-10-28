@@ -5,68 +5,76 @@
 #include <stdexcept>
 #include <vector>
 
-void test_empty_and_single_value() {
-    BinaryHeap<int> heap;
+void test_empty_and_single() {
+    BinaryHeap heap;
     assert(heap.empty());
     assert(heap.size() == 0);
 
-    bool top_threw = false;
+    bool threw = false;
     try {
         (void)heap.top();
     } catch (const std::out_of_range&) {
-        top_threw = true;
+        threw = true;
     }
-    assert(top_threw);
+    assert(threw);
 
     heap.push(42);
     assert(!heap.empty());
     assert(heap.size() == 1);
     assert(heap.top() == 42);
     assert(heap.check_invariant());
-
-    heap.pop();
-    assert(heap.empty());
 }
 
 void test_sift_up() {
-    BinaryHeap<int> heap(std::vector<int>{90, 70, 80, 20, 40, 50, 60});
+    BinaryHeap heap({90, 70, 80, 20, 40, 50, 60});
     assert(heap.check_invariant());
 
     heap.push(85);
     assert(heap.top() == 90);
+    assert(heap.storage() == std::vector<int>({90, 85, 80, 70, 40, 50, 60, 20}));
     assert(heap.check_invariant());
 }
 
-void test_sift_down_and_priority_order() {
-    BinaryHeap<int> heap(std::vector<int>{40, 10, 70, 30, 90, 20, 80, 60, 50});
+void test_heapify_and_repeated_pop() {
+    BinaryHeap heap({40, 10, 70, 30, 90, 20, 80, 60, 50});
     assert(heap.check_invariant());
-    assert(heap.top() == 90);
 
-    std::vector<int> removed;
+    const std::vector<int> expected{90, 80, 70, 60, 50, 40, 30, 20, 10};
+    std::vector<int> observed;
+
     while (!heap.empty()) {
-        removed.push_back(heap.top());
+        observed.push_back(heap.top());
         heap.pop();
         assert(heap.check_invariant());
     }
 
-    assert((removed == std::vector<int>{90, 80, 70, 60, 50, 40, 30, 20, 10}));
+    assert(observed == expected);
 }
 
-void test_duplicates() {
-    BinaryHeap<int> heap(std::vector<int>{5, 5, 7, 7, 7, 1});
-    assert(heap.check_invariant());
-    assert(heap.top() == 7);
+void test_duplicate_priorities() {
+    BinaryHeap heap;
+    heap.push(5);
+    heap.push(5);
+    heap.push(7);
+    heap.push(7);
+    heap.push(1);
 
-    heap.pop();
-    assert(heap.top() == 7);
-    assert(heap.check_invariant());
+    const std::vector<int> expected{7, 7, 5, 5, 1};
+    std::vector<int> observed;
+
+    while (!heap.empty()) {
+        observed.push_back(heap.top());
+        heap.pop();
+    }
+
+    assert(observed == expected);
 }
 
 int main() {
-    test_empty_and_single_value();
+    test_empty_and_single();
     test_sift_up();
-    test_sift_down_and_priority_order();
-    test_duplicates();
+    test_heapify_and_repeated_pop();
+    test_duplicate_priorities();
 
     std::cout << "Week 8 public tests passed.\n";
 }

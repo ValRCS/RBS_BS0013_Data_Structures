@@ -58,26 +58,28 @@ Suggested pacing:
 
 ## Starter interface
 
-Open `include/binary_heap.hpp`.
+The core exercise is **integer-only** to keep implementation in a conventional `.cpp` file and focus on heap algorithms.
+
+
+Read the supplied interface `include/binary_heap.hpp` and implement all TODOs in **`src/binary_heap.cpp`** (inside `starter/` if working from the private instructor package). Do not create a new source file or put method definitions into the header.
 
 The starter provides this public interface:
 
 ```cpp
-template <typename T>
 class BinaryHeap {
 public:
     BinaryHeap();
-    explicit BinaryHeap(std::vector<T> values);
+    explicit BinaryHeap(std::vector<int> values);
 
     bool empty() const;
     std::size_t size() const;
-    const T& top() const;
+    const int& top() const;
 
-    void push(const T& value);
+    void push(int value);
     void pop();
 
     bool check_invariant() const;
-    const std::vector<T>& storage() const;
+    const std::vector<int>& storage() const;
 };
 ```
 
@@ -144,7 +146,7 @@ Do not try to prove that the whole vector is sorted. A heap is **not** a sorted 
 Implement:
 
 ```cpp
-const T& top() const;
+const int& top() const;
 ```
 
 Requirements:
@@ -162,7 +164,7 @@ State its time and auxiliary-space complexity.
 Implement:
 
 ```cpp
-void push(const T& value);
+void push(int value);
 ```
 
 Algorithm:
@@ -220,7 +222,7 @@ Do not shift every element left. That would destroy the intended complexity.
 The constructor:
 
 ```cpp
-explicit BinaryHeap(std::vector<T> values);
+explicit BinaryHeap(std::vector<int> values);
 ```
 
 receives arbitrary values. Implement `heapify()` so it converts them to a valid heap.
@@ -289,7 +291,7 @@ Optional: investigate how `std::priority_queue` uses a comparator to create min-
 
 ## Extensions
 
-1. Add a comparator template parameter so the same class supports min-heaps.
+1. Advanced C++ extension: redesign this integer-only class as a template supporting arbitrary comparable types and a comparator. Template definitions usually need to remain visible in the header (or an included implementation file); this is intentionally outside the core .cpp lab.
 2. Count comparisons during `push`, `pop`, and bottom-up heapify.
 3. Compare repeated insertion with bottom-up heapify on increasing input sizes.
 4. Add `replace_top(value)` and reason about its complexity.
