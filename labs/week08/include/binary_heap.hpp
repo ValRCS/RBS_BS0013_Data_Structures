@@ -1,74 +1,33 @@
 #pragma once
 
 #include <cstddef>
-#include <stdexcept>
-#include <utility>
 #include <vector>
 
-template <typename T>
+// Week 8 deliberately uses integer priorities so the implementation
+// belongs in src/binary_heap.cpp, like earlier C++ labs.
 class BinaryHeap {
 public:
     BinaryHeap() = default;
-
-    explicit BinaryHeap(std::vector<T> values)
-        : data_(std::move(values)) {
-        heapify();
-    }
+    explicit BinaryHeap(std::vector<int> values);
 
     [[nodiscard]] bool empty() const noexcept { return data_.empty(); }
     [[nodiscard]] std::size_t size() const noexcept { return data_.size(); }
-    [[nodiscard]] const std::vector<T>& storage() const noexcept { return data_; }
+    [[nodiscard]] const std::vector<int>& storage() const noexcept { return data_; }
 
-    [[nodiscard]] const T& top() const {
-        todo("TODO: implement top()");
-    }
+    [[nodiscard]] const int& top() const;
+    void push(int value);
+    void pop();
 
-    void push(const T& value) {
-        (void)value;
-        todo("TODO: implement push()");
-    }
-
-    void pop() {
-        todo("TODO: implement pop()");
-    }
-
-    [[nodiscard]] bool check_invariant() const {
-        todo("TODO: implement check_invariant()");
-    }
+    [[nodiscard]] bool check_invariant() const;
 
 private:
-    [[noreturn]] static void todo(const char* operation) {
-        throw std::logic_error(operation);
-    }
+    [[nodiscard]] static std::size_t parent(std::size_t i);
+    [[nodiscard]] static std::size_t left(std::size_t i);
+    [[nodiscard]] static std::size_t right(std::size_t i);
 
-    [[nodiscard]] static std::size_t parent(std::size_t i) {
-        (void)i;
-        todo("TODO: implement parent()");
-    }
+    void sift_up(std::size_t i);
+    void sift_down(std::size_t i);
+    void heapify();
 
-    [[nodiscard]] static std::size_t left(std::size_t i) {
-        (void)i;
-        todo("TODO: implement left()");
-    }
-
-    [[nodiscard]] static std::size_t right(std::size_t i) {
-        (void)i;
-        todo("TODO: implement right()");
-    }
-
-    void sift_up(std::size_t i) {
-        (void)i;
-        todo("TODO: implement sift_up()");
-    }
-
-    void sift_down(std::size_t i) {
-        (void)i;
-        todo("TODO: implement sift_down()");
-    }
-
-    void heapify() {
-        todo("TODO: implement heapify()");
-    }
-
-    std::vector<T> data_;
+    std::vector<int> data_;
 };

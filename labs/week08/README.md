@@ -1,6 +1,6 @@
 # Week 8 Lab — Binary Heap and Priority Queue
 
-Implement a max-oriented `BinaryHeap<T>` backed by `std::vector`.
+Implement a max-oriented `BinaryHeap` backed by `std::vector`.
 
 The lab focuses on the relationship between a complete binary tree and its contiguous array representation, plus the two repair operations:
 
@@ -20,7 +20,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-The initial starter compiles but tests will fail until the TODOs in `include/binary_heap.hpp` are implemented.
+The initial starter **compiles** but tests fail until students implement the TODOs in **`src/binary_heap.cpp`**. The supplied `include/binary_heap.hpp` declares the class and normally does not need editing. This lab uses integer priorities to keep declarations and definitions separate, consistent with earlier weeks.
 
 After completing the lab:
 
@@ -36,7 +36,8 @@ This runs both a normal Debug build and a sanitizer build.
 assignment.md
 instructions.md
 reflection.md
-include/binary_heap.hpp
+include/binary_heap.hpp       interface
+src/binary_heap.cpp           TODO implementation
 tests/test_binary_heap.cpp
 scripts/check-week08.sh
 ```

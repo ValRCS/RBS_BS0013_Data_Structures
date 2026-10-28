@@ -13,7 +13,9 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-The initial starter is designed to compile, but several tests will fail until you implement the TODOs in `include/binary_heap.hpp`.
+The initial starter is designed to compile, but several tests will fail until you implement the TODOs in `src/binary_heap.cpp`.
+
+The header `include/binary_heap.hpp` supplies the interface; do not change it for the core tasks. Implement method definitions in `src/binary_heap.cpp`, as in earlier C++ labs. No new file needs to be created.
 
 ## Recommended workflow
 
@@ -53,7 +55,7 @@ bash scripts/check-week08.sh
 
 You should normally change:
 
-- `include/binary_heap.hpp`;
+- `src/binary_heap.cpp`;
 - `tests/test_binary_heap.cpp` to add your own tests;
 - `reflection.md`.
 

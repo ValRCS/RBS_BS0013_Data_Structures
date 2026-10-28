@@ -10,4 +10,4 @@ Answer concisely after your implementation passes the tests.
 
 4. **Heapify.** Why can bottom-up heap construction run in `Θ(n)` even though one sift-down can cost `O(log n)`?
 
-5. **Library comparison.** Give one reason to use `std::priority_queue` in production code and one reason implementing `BinaryHeap<T>` is pedagogically useful.
+5. **Library comparison.** Give one reason to use `std::priority_queue` in production code and one reason implementing `BinaryHeap` is pedagogically useful.
