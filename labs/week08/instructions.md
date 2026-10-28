@@ -1,6 +1,45 @@
 # Week 8 Lab Instructions
 
-## Start in Codespaces
+## 1. Update your existing fork before starting Week 8
+
+If you forked the course repository at the beginning of the semester, **keep using that fork and its Codespace**. A normal `git pull` from your fork's `origin` does not necessarily bring in changes made later to the instructor's repository. You need to fetch from the course repository (the `upstream` remote).
+
+Open the terminal in your existing Codespace, at the repository root. First inspect and save your work:
+
+```bash
+git status
+git remote -v
+```
+
+If `git status` shows uncommitted changes, commit your source and reflection files **before updating**. For example, if your changes are in the labs directory:
+
+```bash
+git add labs/
+git commit -m "Save earlier lab work before Week 8"
+```
+
+Only commit files you intend to keep; do not stage build directories or generated executables. If there are no changes to commit, skip these two commands.
+
+Your `origin` should point to **your own fork**. Check the output of `git remote -v`. If `upstream` is **not listed**, add the official public course repository **once**:
+
+```bash
+git remote add upstream https://github.com/ValRCS/RBS_BS0013_Data_Structures.git
+```
+
+If `upstream` already exists, **do not add it again**. Then synchronize your fork:
+
+```bash
+git switch main
+git fetch upstream
+git merge upstream/main
+git push origin main
+```
+
+This brings newly published labs into your Codespace's `main` branch and pushes the merged result back to your GitHub fork. It preserves your existing commits. A successful update should make `labs/week08/` available.
+
+If Git reports uncommitted changes, a merge conflict, or a rejected push, **do not run `git reset --hard`, force-push, or delete your fork**. Inspect `git status` and ask the instructor for help if needed.
+
+## 2. Open the Week 8 lab
 
 The repository-wide devcontainer already provides C++20, CMake, and a 2-core environment.
 
@@ -17,7 +56,7 @@ The initial starter is designed to compile, but several tests will fail until yo
 
 The header `include/binary_heap.hpp` supplies the interface; do not change it for the core tasks. Implement method definitions in `src/binary_heap.cpp`, as in earlier C++ labs. No new file needs to be created.
 
-## Recommended workflow
+## 3. Recommended workflow
 
 For each operation:
 
@@ -37,7 +76,7 @@ check the invariant
 
 Do not begin by rewriting the whole class.
 
-## Sanitizer verification
+## 4. Sanitizer verification
 
 ```bash
 cmake -S . -B build-sanitize -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
@@ -51,7 +90,7 @@ Or run the convenience script after your implementation is complete:
 bash scripts/check-week08.sh
 ```
 
-## What you may change
+## 5. What you may change
 
 You should normally change:
 
@@ -61,7 +100,7 @@ You should normally change:
 
 Do not replace the class with `std::priority_queue` and do not remove public tests.
 
-## Before submission
+## 6. Before submission
 
 Check:
 
