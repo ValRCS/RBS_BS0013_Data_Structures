@@ -14,7 +14,8 @@ Public student materials for **BS0013 Data Structures** at Riga Business School,
 - `labs/week05/` — Week 5 circular-queue practical;
 - `labs/week06/` — Week 6 linear-probing hash-map practical;
 - `labs/week08/` — Week 8 binary-heap / priority-queue practical;
-- `labs/week09/` — Week 9 binary-search-tree practical.
+- `labs/week09/` — Week 9 binary-search-tree practical;
+- `labs/week10/` — Week 10 AVL-tree practical.
 
 ## Use GitHub Codespaces
 
@@ -57,27 +58,23 @@ git push origin main
 
 A normal weekly update should merge cleanly because new material is usually added in new week folders. If Git reports a merge conflict, inspect `git status` and resolve the conflict before continuing; do not discard your previous lab work merely to obtain the update.
 
-## Current practical: Week 9
+## Current practical: Week 10
 
-After synchronizing your fork:
+After updating your fork (see [Week 10 instructions](labs/week10/instructions.md)):
 
 ~~~bash
-cd labs/week09
+cd labs/week10
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 ctest --test-dir build --output-on-failure
 ~~~
 
-Read labs/week09/instructions.md and labs/week09/assignment.md. The starter builds but deliberately fails tests until the BST TODOs are implemented.
+The starter intentionally fails its tests until the AVL TODOs are implemented. After implementation run `bash scripts/check-week10.sh` for normal and sanitizer verification.
 
-After completing the implementation, verify with:
+## Week 10 lecture reading
 
-~~~bash
-bash scripts/check-week09.sh
-~~~
+[Balanced Search Trees — AVL Invariants and Rotations](lectures/week10/lecture.md).
 
-This runs public tests in normal and sanitizer configurations. Keep build/ and build-sanitize/ out of commits.
+## Previous prerequisite
 
-## Week 9 lecture reading
-
-[Binary Search Trees](lectures/week09/lecture.md) provides the lecture's diagrams, invariant explanations, operation traces and complexity discussion.
+[Week 9 — Binary Search Trees](lectures/week09/lecture.md) and [Week 9 practical](labs/week09/).
