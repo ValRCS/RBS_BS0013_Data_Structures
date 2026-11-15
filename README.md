@@ -16,6 +16,9 @@ Public student materials for **BS0013 Data Structures** at Riga Business School,
 - `labs/week08/` — Week 8 binary-heap / priority-queue practical;
 - `labs/week09/` — Week 9 binary-search-tree practical;
 - `labs/week10/` — Week 10 AVL-tree practical.
+- `labs/week11/` — Week 11 graph representation practical.
+- `labs/week12/` — Week 12 trie practical.
+- `labs/week13/` — Week 13 B-tree practical.
 
 ## Use GitHub Codespaces
 
@@ -58,23 +61,23 @@ git push origin main
 
 A normal weekly update should merge cleanly because new material is usually added in new week folders. If Git reports a merge conflict, inspect `git status` and resolve the conflict before continuing; do not discard your previous lab work merely to obtain the update.
 
-## Current practical: Week 10
+## Current practical: Week 13
 
-After updating your fork (see [Week 10 instructions](labs/week10/instructions.md)):
+Update your fork following the [Week 13 Codespaces instructions](labs/week13/instructions.md). Then, from your fork root:
 
 ~~~bash
-cd labs/week10
+cd labs/week13
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 ctest --test-dir build --output-on-failure
 ~~~
 
-The starter intentionally fails its tests until the AVL TODOs are implemented. After implementation run `bash scripts/check-week10.sh` for normal and sanitizer verification.
+The starter is intentionally incomplete (four TODOs); public tests fail until the B-tree operations are implemented. Read the [Week 13 assignment](labs/week13/assignment.md) and complete its reflection.
 
-## Week 10 lecture reading
+## Week 13 lecture reading
 
-[Balanced Search Trees — AVL Invariants and Rotations](lectures/week10/lecture.md).
+[External-Memory and Advanced Data Structures — B-trees and B+ trees](lectures/week13/lecture.md).
 
-## Previous prerequisite
+## Previous prerequisites
 
-[Week 9 — Binary Search Trees](lectures/week09/lecture.md) and [Week 9 practical](labs/week09/).
+[Week 12 — Tries](lectures/week12/lecture.md) and [Week 10 — AVL Trees](lectures/week10/lecture.md).
