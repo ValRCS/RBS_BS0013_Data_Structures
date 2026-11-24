@@ -19,6 +19,7 @@ Public student materials for **BS0013 Data Structures** at Riga Business School,
 - `labs/week11/` — Week 11 graph representation practical.
 - `labs/week12/` — Week 12 trie practical.
 - `labs/week13/` — Week 13 B-tree practical.
+- `labs/week14/` — Week 14 capstone and benchmark.
 
 ## Use GitHub Codespaces
 
@@ -61,23 +62,10 @@ git push origin main
 
 A normal weekly update should merge cleanly because new material is usually added in new week folders. If Git reports a merge conflict, inspect `git status` and resolve the conflict before continuing; do not discard your previous lab work merely to obtain the update.
 
-## Current practical: Week 13
+## Current practical: Week 14
 
-Update your fork following the [Week 13 Codespaces instructions](labs/week13/instructions.md). Then, from your fork root:
+Update your fork using the [Week 14 Codespaces instructions](labs/week14/instructions.md). Then follow the [assignment](labs/week14/assignment.md), implement four membership indexes, run tests, benchmark in Release mode and complete the reflection.
 
-~~~bash
-cd labs/week13
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build
-ctest --test-dir build --output-on-failure
-~~~
+[Week 14 lecture — STL, Iterators and Selection](lectures/week14/lecture.md)
 
-The starter is intentionally incomplete (four TODOs); public tests fail until the B-tree operations are implemented. Read the [Week 13 assignment](labs/week13/assignment.md) and complete its reflection.
-
-## Week 13 lecture reading
-
-[External-Memory and Advanced Data Structures — B-trees and B+ trees](lectures/week13/lecture.md).
-
-## Previous prerequisites
-
-[Week 12 — Tries](lectures/week12/lecture.md) and [Week 10 — AVL Trees](lectures/week10/lecture.md).
+[Week 13 — B-trees and B+ trees](lectures/week13/lecture.md)
