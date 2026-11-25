@@ -27,3 +27,5 @@ Repository Settings → Pages → Deploy from a branch → main → /docs. Expec
 JavaScript demonstrations will model structures, not execute C++. Formal assessments and submissions remain in Moodle. Do not publish private tests, grading material or assessed lab solutions. Website changes should originate in the private instructor repository and be deliberately released to this directory.
 
 Week 10 Version 1 includes BST/AVL comparison, rotation and insertion playback, invariant challenges, complexity experiments, formative questions and six standalone C++20 demonstrations.
+
+Week 9 Version 1 includes 15 constructor presets, search and insertion traces, four traversals, eight deletion scenarios, symbolic ownership snapshots, nine invariant challenges, complexity experiments, 30 formative questions and eight standalone C++20 demonstrations.
