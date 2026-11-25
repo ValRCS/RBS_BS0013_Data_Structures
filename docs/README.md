@@ -29,3 +29,5 @@ JavaScript demonstrations will model structures, not execute C++. Formal assessm
 Week 10 Version 1 includes BST/AVL comparison, rotation and insertion playback, invariant challenges, complexity experiments, formative questions and six standalone C++20 demonstrations.
 
 Week 9 Version 1 includes 15 constructor presets, search and insertion traces, four traversals, eight deletion scenarios, symbolic ownership snapshots, nine invariant challenges, complexity experiments, 30 formative questions and eight standalone C++20 demonstrations.
+
+Week 12 Version 1 includes 12 dictionary presets, independent operation playback, live completion, deletion prediction, eight invariant repairs, dense/sparse storage experiments, radix compression, 24 formative questions and eight independent C++20 demonstrations.
