@@ -1,0 +1,5 @@
+export function pageCapacity(B,H,K,P,R){if(![B,H,K,P,R].every(Number.isSafeInteger)||B<1||H<0||K<1||P<1||R<1)throw Error("Positive integral sizes required (header may be zero).");const keys=Math.max(0,Math.floor((B-H-P)/(K+P))),leaf=Math.max(0,Math.floor((B-H)/R));return {keys,fanout:keys+1,leaf,feasible:B>=H+P&&keys>=1&&leaf>=1}}
+
+export function idealLevels(n,leaf,fanout){if(!Number.isSafeInteger(n)||n<0||!Number.isSafeInteger(leaf)||leaf<1||!Number.isSafeInteger(fanout)||fanout<2)throw Error("Need nonnegative record count, positive leaf capacity and fanout ≥ 2.");if(!n)return [];const levels=[Math.ceil(n/leaf)];while(levels.at(-1)>1)levels.push(Math.ceil(levels.at(-1)/fanout));return levels.reverse()}
+
+export function cacheCost(paths,capacity,comparisonCount,comparisonCost,missCost){const cache=new Map();let hits=0,misses=0;for(const path of paths)for(const id of path){if(cache.has(id)){hits++;cache.delete(id)}else misses++;if(capacity>0){cache.set(id,true);if(cache.size>capacity)cache.delete(cache.keys().next().value)}}return {hits,misses,visits:hits+misses,cost:comparisonCount*comparisonCost+misses*missCost}}
