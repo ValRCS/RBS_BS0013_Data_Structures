@@ -3,9 +3,10 @@ let nextId=0;
 function svgEl(name,attrs={},value){const e=document.createElementNS(NS,name);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));if(value!==undefined)e.textContent=value;return e}
 export function renderer(svg,{onVertex=()=>{},onEdge=()=>{},onMove=()=>{}}={}){
  const marker="graph-arrow-"+(++nextId);let positions=new Map(),g,state={},drag=null;
- function reset(){positions=new Map()}
+ function reset(layout={}){positions=new Map(Object.entries(layout).filter(([,p])=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)).map(([id,p])=>[Number(id),[...p]]))}
+ function layout(){return Object.fromEntries([...positions].map(([id,p])=>[id,[...p]]))}
  function draw(graph,view={}){
-  g=graph;state=view;const ids=g.vertices, n=ids.length;for(const [i,v] of ids.entries())if(!positions.has(v)){const a=-Math.PI/2+i*2*Math.PI/Math.max(n,1);positions.set(v,n===1?[240,145]:[240+175*Math.cos(a),145+105*Math.sin(a)])}
+  g=graph;state=view;const ids=g.vertices, n=ids.length;for(const [i,v] of ids.entries())if(!positions.has(v)){const a=-Math.PI/2+i*2*Math.PI/Math.max(n,1);positions.set(v,n===1?[240,145]:[240+175*Math.cos(a),145+90*Math.sin(a)])}
   for(const id of positions.keys())if(!ids.includes(id))positions.delete(id);
   svg.replaceChildren();svg.setAttribute("viewBox","0 0 480 290");svg.setAttribute("role","img");svg.setAttribute("aria-label",(g.directed?"Directed":"Undirected")+" graph; vertices "+ids.join(", ")+"; edges "+g.edges.map(e=>e[0]+" to "+e[1]+(g.weighted?", weight "+e[2]:"")).join("; "));
   const defs=svgEl("defs"),m=svgEl("marker",{id:marker,viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:7,markerHeight:7,orient:"auto-start-reverse"});m.append(svgEl("path",{d:"M0 0 L10 5 L0 10 Z",class:"arrow-tip"}));defs.append(m);svg.append(defs);
@@ -16,7 +17,7 @@ export function renderer(svg,{onVertex=()=>{},onEdge=()=>{},onMove=()=>{}}={}){
   for(const v of ids){const [x,y]=positions.get(v),status=view.current===v?"current":view.done?.includes(v)?"done":view.seen?.includes(v)?"seen":view.selected===v?"selected":"idle";const el=svgEl("g",{class:"graph-node "+status,"data-vertex":v});el.append(svgEl("circle",{cx:x,cy:y,r:17}),svgEl("text",{x,y:y+5,"text-anchor":"middle"},v));el.addEventListener("pointerdown",e=>{drag={v,x:e.clientX,y:e.clientY,moved:false};svg.setPointerCapture?.(e.pointerId)});svg.append(el);if(view.labels){svg.append(svgEl("text",{x,y:y+32,"text-anchor":"middle",class:"distance-label"},(view.labels[v]??"∞")));}}
   if(!ids.length)svg.append(svgEl("text",{x:240,y:145,"text-anchor":"middle",class:"edge-weight"},"Empty graph"));
  }
- svg.addEventListener("pointermove",e=>{if(!drag)return;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>4)drag.moved=true;if(!drag.moved)return;const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());positions.set(drag.v,[Math.max(42,Math.min(438,q.x)),Math.max(55,Math.min(262,q.y))]);draw(g,state);onMove(drag.v)});
+ svg.addEventListener("pointermove",e=>{if(!drag)return;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>4)drag.moved=true;if(!drag.moved)return;const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());positions.set(drag.v,[Math.max(42,Math.min(438,q.x)),Math.max(55,Math.min(245,q.y))]);draw(g,state);onMove(drag.v)});
  svg.addEventListener("pointerup",()=>{if(drag&&!drag.moved)onVertex(drag.v);drag=null});svg.addEventListener("pointercancel",()=>drag=null);
- return {draw,reset};
+ return {draw,reset,layout};
 }

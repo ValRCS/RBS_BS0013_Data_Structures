@@ -1,0 +1,33 @@
+import {graph,representations} from "../../assets/js/core/graph-model.mjs";
+import {renderer} from "../../assets/js/core/graph-renderer.mjs";
+import {el,button} from "./ui.mjs";
+const path=()=>graph([0,1,2],[[0,1],[1,2]]);
+export const challenges={
+ matrix:{title:"Missing reciprocal matrix entry",rule:"Undirected adjacency matrices are symmetric.",hint:"Compare cells [1,2] and [2,1]. Both represent edge 1—2.",g:path,kind:"matrix",initial:[[0,1,0],[1,0,1],[0,0,0]],expected:[[0,1,0],[1,0,1],[0,1,0]]},
+ duplicate:{title:"Duplicate adjacency entry",rule:"A simple graph stores each neighbour once.",hint:"Vertex 0 has two distinct neighbours, 1 and 2. Remove one repeated 1.",g:()=>graph([0,1,2],[[0,1],[0,2]]),kind:"bucket",initial:[1,1,2],expected:[1,2]},
+ invalid:{title:"Invalid vertex identifier",rule:"Every adjacency entry refers to an existing vertex.",hint:"Only 0, 1 and 2 are valid IDs.",g:()=>graph([0,1,2],[[0,1],[0,2]]),kind:"bucket",initial:[1,4,2],expected:[1,2]},
+ count:{title:"Incorrect logical edge count",rule:"An undirected non-loop edge has two stored adjacency entries but counts once.",hint:"Count the lines in the intended graph, not both directions in memory.",g:path,kind:"count",initial:4,expected:2},
+ loop:{title:"Duplicate self-loop entry",rule:"Our lab stores an undirected self-loop once, even though its degree contribution is two.",hint:"The bucket for 0 contains one 0 and one 1.",g:()=>graph([0,1],[[0,0],[0,1]]),kind:"bucket",initial:[0,0,1],expected:[0,1]},
+ reversed:{title:"Reversed edge direction",rule:"Matrix row = source; column = destination.",hint:"The intended edge is 0 → 1, not 1 → 0.",g:()=>graph([0,1],[[0,1]],true),kind:"matrix",initial:[[0,0],[1,0]],expected:[[0,1],[0,0]]},
+ stale:{title:"Stale adjacency entry after deletion",rule:"Removing an undirected edge must remove both reciprocal entries.",hint:"There is no longer an edge between 0 and 1. Remove the obsolete 1 from bucket 0.",g:()=>graph([0,1,2],[[0,2]]),kind:"bucket",initial:[1,2],expected:[2]},
+ sorted:{title:"Incorrect sorted API output",rule:"The lab returns ascending unique neighbours without requiring raw storage to be sorted.",hint:"Arrange the returned copy in ascending order: smallest first.",g:()=>graph([0,1,2,3],[[0,3],[0,1],[0,2]]),kind:"sorted",initial:[3,1,2],expected:[1,2,3]}
+};
+const copy=x=>JSON.parse(JSON.stringify(x));
+export function checkRepair(key,value){const c=challenges[key];if(!c)return false;if(c.kind==="bucket")return Array.isArray(value)&&JSON.stringify([...value].sort((a,b)=>a-b))===JSON.stringify(c.expected);return JSON.stringify(value)===JSON.stringify(c.expected)}
+export function invariantDebugger(host){
+ host.replaceChildren();host.classList.add("tool");host.append(el("h3","Inspect → repair → verify"),el("p","An invariant is a condition that must remain true whenever a representation is valid. The intended graph on the left is correct. The storage on the right contains a bug. Repair only the storage, then check your answer."));
+ const controls=el("div",undefined,"controls"),label=el("label","Challenge"),sel=el("select");for(const [key,c] of Object.entries(challenges)){const o=el("option",c.title);o.value=key;sel.append(o)}label.append(sel);controls.append(label);host.append(controls);
+ const rule=el("p",undefined,"note"),grid=el("div",undefined,"tool-grid"),left=el("div"),right=el("div"),svg=document.createElementNS("http://www.w3.org/2000/svg","svg"),body=el("div"),caption=el("p",undefined,"status");left.append(el("h4","Intended graph"),svg,caption);right.append(el("h4","Corrupted representation"),body);grid.append(left,right);host.append(rule,grid);
+ const view=renderer(svg),actions=el("div",undefined,"controls"),hint=el("p",undefined,"note"),feedback=el("p",undefined,"feedback");hint.hidden=true;feedback.setAttribute("role","status");host.append(actions,hint,feedback);
+ let state,solved=new Set();const progress=el("p",undefined,"status");host.append(progress);
+ actions.append(button("Reset challenge",reset),button("Show / hide hint",()=>{hint.hidden=!hint.hidden}),button("Check repair",check));
+ function reset(){const c=challenges[sel.value];state=copy(c.initial);const g=c.g();view.reset();view.draw(g);caption.textContent=g.edges.map(e=>e[0]+(g.directed?" → ":" — ")+e[1]).join("; ")||"No edges";rule.textContent="Invariant: "+c.rule;hint.textContent=c.hint;hint.hidden=true;feedback.textContent="";draw();updateProgress()}
+ function updateProgress(){progress.textContent="Challenges solved in this session: "+solved.size+" / "+Object.keys(challenges).length}
+ function edit(fn){fn();feedback.textContent="";draw()}
+ function draw(){const c=challenges[sel.value];body.replaceChildren();if(c.kind==="matrix"){body.append(el("p","Click cells to toggle between 0 and 1."));const wrap=el("div",undefined,"scroll-table"),t=el("table",undefined,"data matrix"),head=el("tr");head.append(el("th","u / v"));for(let j=0;j<state.length;j++)head.append(el("th",j));t.append(head);for(const [i,r] of state.entries()){const row=el("tr");row.append(el("th",i));for(const [j,v] of r.entries()){const td=el("td"),b=button(String(v),()=>{edit(()=>state[i][j]=1-v);body.querySelector('[data-cell="'+i+','+j+'"]')?.focus()},v?"present":"");b.dataset.cell=i+","+j;b.setAttribute("aria-label","Cell "+i+","+j+" value "+v);td.append(b);row.append(td)}t.append(row)}wrap.append(t);body.append(wrap)}
+ else if(c.kind==="count"){const r=representations(c.g());body.append(el("p","Stored adjacency entries: "+r.list.flat().length));const l=el("label","Logical edge count"),i=el("input");i.type="number";i.min=0;i.max=20;i.value=state;i.addEventListener("input",()=>{state=i.value===""?null:Number(i.value);feedback.textContent=""});l.append(i);body.append(l)}
+ else if(c.kind==="sorted"){body.append(el("p","Raw bucket 0: [3, 1, 2]. Swap adjacent returned entries until sorted."));const row=el("div",undefined,"chips");for(const [i,v] of state.entries()){row.append(el("span",v,"chip"));if(i<state.length-1)row.append(button("Swap "+i+" / "+(i+1),()=>edit(()=>[state[i],state[i+1]]=[state[i+1],state[i]])))}body.append(row)}
+ else{body.append(el("p","Bucket 0: click an unwanted entry to remove it."));const row=el("div",undefined,"chips");for(const [i,v] of state.entries())row.append(button(String(v),()=>edit(()=>state.splice(i,1))));if(!state.length)row.append(el("span","∅"));body.append(row)}}
+ function check(){const ok=checkRepair(sel.value,state);feedback.textContent=ok?"Correct: invariant and intended relationships preserved. "+challenges[sel.value].rule:"Not yet correct. Compare the intended graph with the storage. "+challenges[sel.value].hint;if(ok)solved.add(sel.value);updateProgress()}
+ sel.addEventListener("change",reset);reset();
+}

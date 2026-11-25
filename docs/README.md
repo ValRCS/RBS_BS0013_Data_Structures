@@ -1,6 +1,6 @@
 # BS0013 interactive website
 
-Static English-language course companion for Riga Business School, Riga Technical University. All 14 weekly pages are present. Week 11 Version 3 is the first interactive module: graph editor, representations, complexity tools, BFS/DFS/Dijkstra public self-checks and 22 optional C++ implementation notes with eleven independent C++20 demos.
+Static English-language course companion for Riga Business School, Riga Technical University. All 14 weekly pages are present. Week 11 Version 4 is the first interactive module: 27 categorized graph presets, independent graph imports, synchronized operation microscope, guided invariant repairs, representations, complexity tools, BFS/DFS/Dijkstra public self-checks and 22 optional C++ implementation notes with eleven independent C++20 demos.
 
 ## Run locally
 
