@@ -1,0 +1,6 @@
+/* Shared layout primitives for future interactive data-structure models. */
+.visualization{background:var(--surface);border:1px solid var(--line);border-radius:.7rem;padding:1rem;margin:1rem 0}
+.visualization svg{display:block;width:100%;height:auto;max-height:32rem}
+.visualization-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem}
+.visualization-output{overflow-x:auto}
+.visualization figcaption{color:var(--muted);font-size:.9rem}

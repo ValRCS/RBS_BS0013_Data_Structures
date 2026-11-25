@@ -69,3 +69,7 @@ Update your fork using the [Week 14 Codespaces instructions](labs/week14/instruc
 [Week 14 lecture — STL, Iterators and Selection](lectures/week14/lecture.md)
 
 [Week 13 — B-trees and B+ trees](lectures/week13/lecture.md)
+
+## Interactive course website
+
+The [BS0013 website scaffold](docs/index.html) contains overview pages for all 14 weeks. Interactive material is planned, beginning with Week 11. Once GitHub Pages is enabled, the site will be available at https://valrcs.github.io/RBS_BS0013_Data_Structures/. See [website setup](docs/README.md) for local preview instructions.
