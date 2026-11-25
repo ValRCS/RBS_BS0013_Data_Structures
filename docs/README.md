@@ -37,3 +37,5 @@ Week 2 Version 1 includes symbolic object and pointer models, scope and allocati
 Week 3 Version 1 includes ten array presets, independent operation playback, growth-policy comparisons, invalidation and ownership scenarios, ten invariant repair challenges, locality experiments, 30 formative questions and nine standalone C++20 demonstrations.
 
 Week 13 Version 1 includes 15 B-tree presets, independent search and insertion playback, 10 guided invariant repairs, degree comparisons, simulated page costs, B+ point/range queries, 30 formative questions and eight independent C++20 demonstrations.
+
+Week 14 Version 1: 13 container abstractions, 10 algorithms, 13 invalidation cases, ownership models, workload and benchmark experiments, 18 selection scenarios, composite indexes, cumulative revision, 40 original formative questions and ten independent C++20 examples.
