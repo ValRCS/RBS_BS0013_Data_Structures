@@ -1,6 +1,6 @@
 # BS0013 interactive website
 
-Static English-language course companion for Riga Business School, Riga Technical University. All 14 weekly overview pages are present; no interactive lessons are released yet. Week 11 is the first planned module.
+Static English-language course companion for Riga Business School, Riga Technical University. All 14 weekly pages are present. Week 11 is the first interactive module: graph editor, representations, complexity tools, BFS/DFS/Dijkstra and public self-checks.
 
 ## Run locally
 
@@ -24,4 +24,4 @@ Repository Settings → Pages → Deploy from a branch → main → /docs. Expec
 - playground/: future standalone visualizations
 - resources/: cross-course reference landing pages
 
-JavaScript demonstrations added later will model structures, not execute C++. Formal assessments and submissions remain in Moodle. Do not publish private tests, grading material or assessed lab solutions. Website changes should originate in the private instructor repository and be deliberately released to this directory.
+JavaScript demonstrations will model structures, not execute C++. Formal assessments and submissions remain in Moodle. Do not publish private tests, grading material or assessed lab solutions. Website changes should originate in the private instructor repository and be deliberately released to this directory.
