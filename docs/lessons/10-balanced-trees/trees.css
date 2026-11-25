@@ -1,0 +1,18 @@
+.tree-hero{width:100%;height:auto;border-radius:.7rem}
+.tree-tool{border:1px solid var(--line);background:var(--surface);padding:1rem;border-radius:.7rem;margin:1rem 0}
+.tree-controls{display:flex;flex-wrap:wrap;align-items:end;gap:.65rem;margin:.65rem 0}
+.tree-controls label{display:flex;flex-direction:column;gap:.2rem;max-width:100%}
+.tree-controls input,.tree-controls select{font:inherit;max-width:100%}
+.tree-controls input[type=number]{width:8rem}
+.tree-controls input[type=text]{width:min(23rem,100%)}
+.tree-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.tree-scroll{overflow:auto;max-height:32rem;border:1px solid var(--line);border-radius:.4rem}
+.tree-scroll svg{display:block;width:100%;height:auto;color:inherit}
+.tree-edge{stroke:var(--muted);stroke-width:1.6}
+.tree-node circle{fill:var(--surface);stroke:var(--muted);stroke-width:1.5}
+.tree-node text{font-size:11px;fill:currentColor;pointer-events:none}
+.tree-node{cursor:pointer}.tree-node:focus circle,.tree-node.active circle{stroke:#0ea5e9;stroke-width:3;stroke-dasharray:4 2}.tree-node.bad circle{stroke:#e11d48;stroke-width:3}.tree-node.middle circle{stroke:#d97706;stroke-width:4}
+.tree-table{overflow:auto}.tree-table table{width:100%;border-collapse:collapse}.tree-table td,.tree-table th{padding:.45rem;border-bottom:1px solid var(--line);text-align:left}
+.tree-bar{height:.65rem;background:#2563eb;border-radius:.25rem;min-width:2px}.tree-bar.worst{background:#d97706}
+.tree-question{padding:.75rem;border:1px solid var(--line);border-radius:.4rem;margin:.75rem 0}.tree-question label{display:block}
+@media(max-width:680px){.tree-pair{grid-template-columns:1fr}}

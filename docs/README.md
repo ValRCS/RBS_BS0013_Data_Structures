@@ -25,3 +25,5 @@ Repository Settings → Pages → Deploy from a branch → main → /docs. Expec
 - resources/: cross-course reference landing pages
 
 JavaScript demonstrations will model structures, not execute C++. Formal assessments and submissions remain in Moodle. Do not publish private tests, grading material or assessed lab solutions. Website changes should originate in the private instructor repository and be deliberately released to this directory.
+
+Week 10 Version 1 includes BST/AVL comparison, rotation and insertion playback, invariant challenges, complexity experiments, formative questions and six standalone C++20 demonstrations.

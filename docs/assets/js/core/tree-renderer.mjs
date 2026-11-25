@@ -1,0 +1,8 @@
+const NS="http://www.w3.org/2000/svg";
+function el(t,a={},text){const e=document.createElementNS(NS,t);for(const [k,v] of Object.entries(a))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e}
+export function renderTree(svg,root,{active=null,middle=null,metadata=true,path=[],onSelect=()=>{}}={}){
+ svg.replaceChildren();svg.setAttribute("aria-label","Binary tree diagram");svg.setAttribute("role","group");if(!root){svg.style.minWidth="0";svg.setAttribute("viewBox","0 0 320 90");svg.append(el("text",{x:160,y:45,"text-anchor":"middle",fill:"currentColor"},"Empty tree ∅"));return}
+ let i=0,depth=0;const nodes=[],edges=[];function walk(n,d){if(!n)return null;const l=walk(n.l,d+1),p={n,x:45+i++*92,y:40+d*86};depth=Math.max(depth,d);nodes.push(p);const r=walk(n.r,d+1);if(l)edges.push([p,l]);if(r)edges.push([p,r]);return p}walk(root,0);
+ const w=Math.max(320,i*92);svg.setAttribute("viewBox","0 0 "+w+" "+(90+depth*86));svg.style.minWidth=w+"px";for(const [a,b] of edges)svg.append(el("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,class:"tree-edge"}));
+ for(const {n,x,y} of nodes){const b=(n.l?.h??0)-(n.r?.h??0),g=el("g",{class:"tree-node"+(Math.abs(b)>1?" bad":"")+(n.k===active||path.includes(n.k)?" active":"")+(n.k===middle?" middle":""),tabindex:0,role:"button","aria-label":"Key "+n.k+", cached height "+n.h+", balance factor "+b});g.append(el("circle",{cx:x,cy:y,r:23}),el("text",{x,y:y+4,"text-anchor":"middle"},n.k));if(metadata)g.append(el("text",{x,y:y+36,"text-anchor":"middle"},"h="+n.h+" BF="+b));g.onclick=()=>onSelect(n.k);g.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onSelect(n.k)}};svg.append(g)}
+}
