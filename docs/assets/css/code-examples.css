@@ -1,0 +1,20 @@
+/* Shared collapsed implementation examples; no syntax-highlighting library. */
+.cpp-example{border:1px solid var(--line);border-radius:.6rem;margin:.85rem 0;background:var(--surface);padding:.65rem .85rem}
+.cpp-example summary{cursor:pointer;font-weight:650;color:var(--accent);line-height:1.45}
+.cpp-summary-title{overflow-wrap:anywhere}
+.cpp-meta{display:inline-block;margin-left:.6rem;font-size:.82rem;font-weight:400;color:var(--muted)}
+.cpp-example[open] summary{padding-bottom:.65rem;border-bottom:1px solid var(--line)}
+.cpp-body{padding-top:.55rem;min-width:0}
+.cpp-kind{font-size:.86rem;color:var(--muted)}
+.cpp-code{position:relative;min-width:0}
+.cpp-code pre{margin:.5rem 0;overflow-x:auto;max-width:100%;font-size:.88rem;line-height:1.55;white-space:pre;background:var(--bg)}
+.cpp-copy-row{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:.5rem}
+.cpp-copy-row button,.cpp-actions button{background:var(--surface);color:var(--accent);border:1px solid var(--line);border-radius:.35rem;padding:.35rem .65rem;font:inherit;font-size:.85rem;cursor:pointer}
+.cpp-copy-row span{font-size:.8rem;color:var(--muted)}
+.cpp-warning{border-left:3px solid var(--focus);padding-left:.7rem}
+.cpp-toolbar{border:1px solid var(--line);border-radius:.55rem;padding:.75rem 1rem;background:var(--surface)}
+.cpp-toolbar p{margin:.25rem 0}
+.cpp-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.cpp-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:.4rem 1rem;margin-top:1rem}
+.cpp-example:target{outline:2px solid var(--accent);outline-offset:3px}
+@media(max-width:640px){.cpp-meta{display:block;margin-left:1.05rem}.cpp-example{padding:.55rem .65rem}.cpp-code pre{font-size:.8rem}}

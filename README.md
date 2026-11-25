@@ -72,4 +72,4 @@ Update your fork using the [Week 14 Codespaces instructions](labs/week14/instruc
 
 ## Interactive course website
 
-The [BS0013 interactive website](docs/index.html) contains overview pages for all 14 weeks and the interactive Week 11 graph lesson (Version 2), with separate BFS, DFS and Dijkstra workspaces. The site is published at https://valrcs.github.io/RBS_BS0013_Data_Structures/. See [website setup](docs/README.md) for local preview instructions.
+The [BS0013 interactive website](docs/index.html) contains overview pages for all 14 weeks and the interactive Week 11 graph lesson (Version 3), with separate algorithm workspaces, 22 optional C++ implementation notes and eleven standalone C++20 demonstrations. The site is published at https://valrcs.github.io/RBS_BS0013_Data_Structures/. See [website setup](docs/README.md) for local preview instructions.
