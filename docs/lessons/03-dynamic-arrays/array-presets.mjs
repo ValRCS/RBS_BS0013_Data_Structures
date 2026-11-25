@@ -1,0 +1,2 @@
+export const presets=[["Empty",[],0],["Single",[10],1],["Spare slots",[10,20,30],8],["Full",[10,20,30,40],4],["Large spare capacity",[5,9],16],["Duplicates",[3,3,3,8],8],["Front workload",[1,2,3,4,5],8],["Middle insertion",[11,22,44,55],8],["Reserved",[4,8],12],["Cleared",[],8]];
+export function seeded(seed){let x=seed>>>0;return Array.from({length:6},()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x%90+10})}

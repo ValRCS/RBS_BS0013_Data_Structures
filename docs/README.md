@@ -33,3 +33,5 @@ Week 9 Version 1 includes 15 constructor presets, search and insertion traces, f
 Week 12 Version 1 includes 12 dictionary presets, independent operation playback, live completion, deletion prediction, eight invariant repairs, dense/sparse storage experiments, radix compression, 24 formative questions and eight independent C++20 demonstrations.
 
 Week 2 Version 1 includes symbolic object and pointer models, scope and allocation playback, 10 memory-error challenges, four guided sanitizer reports, node-chain editing, 30 formative questions and ten independent C++20 demos (plus two intentionally unsafe diagnostic examples).
+
+Week 3 Version 1 includes ten array presets, independent operation playback, growth-policy comparisons, invalidation and ownership scenarios, ten invariant repair challenges, locality experiments, 30 formative questions and nine standalone C++20 demonstrations.
