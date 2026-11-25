@@ -1,0 +1,67 @@
+import {graph,trace,pathTo,updateWeight} from "./graph-model.mjs";
+import {renderer} from "./graph-renderer.mjs";
+import {player} from "./playback.mjs";
+const el=(tag,t,cls)=>{const e=document.createElement(tag);if(t!==undefined)e.textContent=String(t);if(cls)e.className=cls;return e};
+const clone=g=>graph(g.vertices,g.edges,g.directed,g.weighted);
+const format=x=>x===Infinity||x===undefined?"∞":String(x);
+function table(host,heads,rows){const t=el("table",undefined,"data"),h=el("thead"),hr=el("tr"),b=el("tbody");for(const x of heads){const th=el("th",x);th.scope="col";hr.append(th)}h.append(hr);t.append(h);for(const row of rows){const tr=el("tr");for(const x of row)tr.append(el("td",x));b.append(tr)}t.append(b);host.replaceChildren(t)}
+function select(parent,label,items){const l=el("label",label),s=el("select");for(const [v,t] of items){const o=el("option",t);o.value=v;s.append(o)}l.append(s);parent.append(l);return s}
+function options(s,items,preferred){s.replaceChildren();for(const [v,t] of items){const o=el("option",t);o.value=v;s.append(o)}if([...s.options].some(o=>o.value===String(preferred)))s.value=String(preferred)}
+function btn(parent,label,fn){const b=el("button",label);b.type="button";b.addEventListener("click",fn);parent.append(b);return b}
+function svg(parent){const e=document.createElementNS("http://www.w3.org/2000/svg","svg");parent.append(e);return e}
+function drawHeap(host,entries,dist,done){
+ host.replaceChildren();const n=entries.length;if(!n){host.append(el("p","Heap empty.","status"));return}
+ const a=el("div",undefined,"chips");entries.forEach(([d,v],i)=>{const stale=d!==dist[v]||done.includes(v);a.append(el("span",i+": ("+format(d)+", "+v+")"+(stale?" stale":""),"chip"+(stale?" stale-chip":"")))});host.append(a);
+ const s=svg(host),depth=Math.floor(Math.log2(n)),W=640,H=65*(depth+1)+20;s.setAttribute("viewBox","0 0 "+W+" "+H);s.setAttribute("aria-label","Binary heap tree. Array entries are listed above.");s.setAttribute("role","img");
+ const pos=i=>{const d=Math.floor(Math.log2(i+1)),j=i-(2**d-1);return [W*(j+.5)/2**d,35+65*d]};
+ const node=(tag,attrs,t)=>{const x=document.createElementNS("http://www.w3.org/2000/svg",tag);for(const [k,v] of Object.entries(attrs))x.setAttribute(k,String(v));if(t!==undefined)x.textContent=t;return x};
+ for(let i=1;i<n;i++){const [x,y]=pos(i),[px,py]=pos((i-1)>>1);s.append(node("line",{x1:px,y1:py,x2:x,y2:y,stroke:"currentColor","stroke-width":1}))}
+ for(let i=0;i<n;i++){const [x,y]=pos(i),[d,v]=entries[i],stale=d!==dist[v]||done.includes(v);s.append(node("rect",{x:x-25,y:y-13,width:50,height:26,rx:5,fill:stale?"#fee2e2":"#dbeafe",stroke:stale?"#b91c1c":"#2563eb"}),node("text",{x,y:y+4,"text-anchor":"middle","font-size":11,fill:"#172b42"},d+","+v))}
+}
+export function workspace(host,{type,presets,initial,getEditor}){
+ const isD=type==="dijkstra",isDFS=type==="dfs";let g=clone(presets[initial].make()),frames=[],active=type,kind="list";
+ host.replaceChildren();host.classList.add("tool");
+ const controls=el("div",undefined,"controls");host.append(controls);
+ const preset=select(controls,"Example",Object.entries(presets).map(([k,v])=>[k,v.label]));preset.value=initial;
+ const strategy=select(controls,isD?"Minimum selection":"Implementation",isD?[["dijkstra","Lazy binary heap"],["linear","Linear distance scan"]]:isDFS?[["dfs","Explicit stack frames"],["recursive","Recursive calls"]]:[["bfs","FIFO queue"]]);
+ const rep=select(controls,"Representation",[["list","Adjacency list"],["matrix","Adjacency matrix"]]);
+ const source=select(controls,"Source",[]),target=select(controls,isDFS?"Search target (optional)":"Target (optional)",[]);
+ const order=select(controls,"Neighbour order",[["ascending","Ascending"],["descending","Descending"],["raw","Raw storage"]]);
+ let forest=null;if(!isD){const l=el("label","Full forest");forest=el("input");forest.type="checkbox";l.append(forest);controls.append(l)}
+ btn(controls,"Reset example",()=>load(preset.value));btn(controls,"Use main editor graph",()=>{g=clone(getEditor());resetControls();run()});const runBtn=btn(controls,"Run / reset",run);
+ const weightControls=el("div",undefined,"controls");let edgeSelect,weight;
+ if(isD){edgeSelect=select(weightControls,"Edge",[]);const l=el("label","New weight");weight=el("input");weight.type="number";weight.step="any";weight.min="-1000000";weight.max="1000000";l.append(weight);weightControls.append(l);btn(weightControls,"Update weight",()=>{try{if(!weight.value.trim()||!weight.checkValidity())throw Error("Enter a valid weight.");const [u,v]=edgeSelect.value.split(",").map(Number);if(!updateWeight(g,u,v,Number(weight.value)))throw Error("Select a weighted edge.");options(edgeSelect,g.edges.map(e=>[e.slice(0,2).join(","),e[0]+" → "+e[1]+" ("+(e[2]??1)+")"]),[u,v].join(","));run()}catch(e){event.textContent=e.message}});host.append(weightControls);edgeSelect.addEventListener("change",()=>{const [u,v]=edgeSelect.value.split(",").map(Number);weight.value=g.edges.find(e=>e[0]===u&&e[1]===v)?.[2]??1})}
+ const grid=el("div",undefined,"tool-grid"),left=el("div"),right=el("div");grid.append(left,right);host.append(grid);
+ const graphSvg=svg(left),view=renderer(graphSvg),summary=el("p",undefined,"status"),pathBox=el("p",undefined,"note");left.append(summary,pathBox);
+ const event=el("p",undefined,"feedback");event.setAttribute("aria-live","polite");const relaxation=el("div",undefined,"note"),frontier=el("div"),pseudo=el("ol",undefined,"code-lines");right.append(event,relaxation,el("h4",isD?"Priority queue / selection":isDFS?"Active call frames":"FIFO queue"),frontier,el("h4","Pseudocode"),pseudo);
+ const playControls=el("div",undefined,"controls");host.append(playControls);
+ const first=btn(playControls,"First",()=>p.seek(0)),prev=btn(playControls,"Previous",()=>p.step(-1)),play=btn(playControls,"Play",()=>p.toggle()),next=btn(playControls,"Next",()=>p.step(1)),last=btn(playControls,"Last",()=>p.seek(frames.length-1));
+ const seekLabel=el("label","Step"),seek=el("input");seek.type="range";seek.min=0;seek.max=0;seek.value=0;seekLabel.append(seek);playControls.append(seekLabel);seek.addEventListener("input",()=>p.seek(Number(seek.value)));
+ const speed=select(playControls,"Delay (ms)",[[250,"250"],[500,"500"],[1000,"1000"]]);speed.value="500";speed.addEventListener("change",()=>p.speed(Number(speed.value)));
+ const status=el("p",undefined,"status"),metrics=el("p",undefined,"status"),data=el("div",undefined,"scroll-table"),comparison=el("div",undefined,"scroll-table");host.append(status,metrics,data);
+ const lineText={bfs:["Discover and enqueue root","Dequeue vertex","Examine neighbour","Discover, set distance, enqueue","Finish vertex","Complete"],dfs:["Enter frame / discover","Resume frame","Examine next neighbour","Skip discovered","Finish and backtrack","Complete"],dijkstra:["Initialize distances and heap","Pop minimum; settle or discard stale","Compare candidate distance","Update distance and push / no change","Finish vertex","Complete"],linear:["Initialize distance array","Scan for minimum unsettled vertex","Compare candidate distance","Update distance / no change","Finish vertex","Complete"]};
+ function display(st,i,n){
+  const t=target.value===""?null:Number(target.value),src=Number(source.value),finished=i===n-1,valid=t!==null&&st.seen.includes(t)&&(!isD||st.done.includes(t)),path=valid?pathTo(st.parent,src,t):[];
+  view.draw(g,{...st,labels:st.dist,path:finished?path:[]});
+  event.textContent=st.message;status.textContent="Step "+(i+1)+" / "+n;
+  summary.textContent="Discovered: "+st.seen.join(", ")+" · "+(isD?"Settled":"Processed")+": "+st.done.join(", ")+" · order: "+st.visit.join(" → ");
+  pathBox.textContent=path.length?(isDFS?"DFS tree path: ":"Path: ")+path.join(" → ")+(isD?" · total weight "+format(st.dist[t]):isDFS?"":" · "+st.dist[t]+" edges"):finished&&t!==null?"Target unreachable.":"Select a target to reconstruct a path.";
+  relaxation.hidden=!isD||(!st.relaxation&&!st.stale);
+  if(st.stale)relaxation.textContent="Stale entry ("+st.stale.join(", ")+"): ignore because current distance is "+format(st.dist[st.stale[1]])+".";
+  else if(st.relaxation){const r=st.relaxation;relaxation.textContent="d["+r.u+"] + w("+r.u+","+r.v+") = "+format(r.base)+" + "+r.w+" = "+format(r.candidate)+"; compare with "+format(r.old)+". "+(r.improved?"Improvement.":"No improvement.")}
+  if(active==="dijkstra")drawHeap(frontier,st.frontier,st.dist,st.done);
+  else if(active==="linear")frontier.replaceChildren(el("p","Unsettled distances: "+g.vertices.filter(v=>!st.done.includes(v)).map(v=>v+":"+format(st.dist[v])).join(" · ")));
+  else{frontier.replaceChildren();const q=el("div",undefined,isDFS?"frame-stack":"chips");if(!st.frontier.length)q.append(el("span","Empty","status"));else if(isDFS){for(const [u,j] of [...st.frontier].reverse())q.append(el("div","DFS("+u+") · next neighbour "+j,"chip"))}else for(const [j,v] of st.frontier.entries())q.append(el("span",String(v)+(j===0?" (front)":""),"chip"));frontier.append(q)}
+  const lines=lineText[active==="recursive"?"dfs":active];pseudo.replaceChildren(...lines.map((x,j)=>el("li",x,j===st.line?"active-line":"")));
+  metrics.textContent="Storage positions scanned: "+st.scanned+" · Edges examined: "+st.examined+" · Max frontier: "+st.maxFrontier+(active==="linear"?" · Minimum-selection checks: "+st.selectionScans:"");
+  table(data,["Vertex",isDFS?"Depth":isD?"Distance":"Edge distance","Parent","State",...(forest?.checked?["Root"]:[]),...(isDFS?["Entry","Exit"]:[])],g.vertices.map(v=>[v,format(st.dist[v]),st.parent[v]??"—",isD?(st.done.includes(v)?"Settled":st.seen.includes(v)?"Tentative":finished&&t===null?"Unreachable":"Unknown"):(st.done.includes(v)?"Processed":st.seen.includes(v)?"Discovered":"Not discovered"),...(forest?.checked?[st.rootOf[v]??"—"]:[]),...(isDFS?[st.enter[v]??"—",st.exit[v]??"—"]:[])]));
+ }
+ const p=player(display,(i,n,playing)=>{seek.max=Math.max(0,n-1);seek.value=i;play.textContent=playing?"Pause":"Play";for(const b of [first,prev,play,next,last,seek])b.disabled=!n;prev.disabled=!n||i===0;next.disabled=!n||i===n-1});
+ function resetControls(){const ids=g.vertices.map(v=>[v,String(v)]);options(source,ids,g.vertices[0]);options(target,[["","None"],...ids],"");if(forest)forest.checked=false;if(isD){options(edgeSelect,g.edges.map(e=>[e.slice(0,2).join(","),e[0]+" → "+e[1]+" ("+(e[2]??1)+")"]));weight.value=g.edges[0]?.[2]??1;weight.disabled=!g.weighted||!g.edges.length}view.reset()}
+ function load(key){g=clone(presets[key].make());resetControls();run()}
+ function run(){try{p.clear();comparison.replaceChildren();active=strategy.value;kind=active==="linear"?"matrix":rep.value;rep.disabled=active==="linear";if(active==="linear")rep.value="matrix";if(!g.vertices.length)throw Error("Add a vertex in the main editor or select a nonempty preset.");const t=target.value===""?null:Number(target.value);frames=trace(g,{algorithm:active,kind,source:Number(source.value),target:t,forest:!!forest?.checked&&t===null,order:order.value});p.load(frames)}catch(e){frames=[];view.draw(g);event.textContent=e.message;frontier.replaceChildren();pseudo.replaceChildren();data.replaceChildren();pathBox.textContent="No active path.";relaxation.hidden=true;summary.textContent="";metrics.textContent="";status.textContent="No active trace."}}
+ for(const c of [strategy,rep,source,target,order,forest].filter(Boolean))c.addEventListener("change",()=>{if(c===forest&&forest.checked)target.value="";if(c===target&&target.value!==""&&forest)forest.checked=false;run()});preset.addEventListener("change",()=>load(preset.value));
+ const compControls=el("div",undefined,"controls");host.append(compControls,comparison);
+ btn(compControls,isD?"Compare heap vs linear selection":isDFS?"Compare recursive and explicit stack":"Compare matrix and list",()=>{try{const configs=isD?[["Heap / list","dijkstra","list"],["Heap / matrix","dijkstra","matrix"],["Linear / matrix","linear","matrix"]]:isDFS?[["Explicit stack","dfs",rep.value],["Recursive","recursive",rep.value]]:[["List","bfs","list"],["Matrix","bfs","matrix"]];const rows=configs.map(([label,a,k])=>{const s=trace(g,{algorithm:a,kind:k,source:Number(source.value),forest:!!forest?.checked,order:order.value}).at(-1);return [label,s.visit.join(" → "),s.scanned,s.examined,s.selectionScans,s.maxFrontier]});table(comparison,["Variant","Order","Storage scans","Edges","Selection checks","Max frontier"],rows)}catch(e){comparison.textContent=e.message}});
+ resetControls();run();return {load,run};
+}

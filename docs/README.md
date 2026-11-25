@@ -1,6 +1,6 @@
 # BS0013 interactive website
 
-Static English-language course companion for Riga Business School, Riga Technical University. All 14 weekly pages are present. Week 11 is the first interactive module: graph editor, representations, complexity tools, BFS/DFS/Dijkstra and public self-checks.
+Static English-language course companion for Riga Business School, Riga Technical University. All 14 weekly pages are present. Week 11 Version 2 is the first interactive module: graph editor, representations, complexity tools, BFS/DFS/Dijkstra and public self-checks.
 
 ## Run locally
 

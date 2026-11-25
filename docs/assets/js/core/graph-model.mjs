@@ -15,6 +15,7 @@ function removeEdge(g,u,v){check(g,u);check(g,v);[u,v]=key(g,u,v);const i=g.edge
 
 function addVertex(g){if(g.vertices.length>=16)throw Error("Visual graph limit: 16 vertices.");const v=g.vertices.length?Math.max(...g.vertices)+1:0;if(v>1000000)throw Error("Vertex ID limit reached.");g.vertices.push(v);return v}
 
+function updateWeight(g,u,v,w){check(g,u);check(g,v);if(!g.weighted||!Number.isFinite(w)||Math.abs(w)>1000000)throw Error("Invalid weight or unweighted graph.");[u,v]=key(g,u,v);const e=g.edges.find(e=>e[0]===u&&e[1]===v);if(!e)return false;e[2]=w;return true}
 function removeVertex(g,v){check(g,v);g.vertices=g.vertices.filter(u=>u!==v);g.edges=g.edges.filter(e=>e[0]!==v&&e[1]!==v)}
 
 function representations(g){const ids=[...g.vertices],index=new Map(ids.map((v,i)=>[v,i])),matrix=ids.map(()=>ids.map(()=>null)),list=ids.map(()=>[]);for(const [u,v,w=1] of g.edges){matrix[index.get(u)][index.get(v)]=w;list[index.get(u)].push([v,w]);if(!g.directed&&u!==v){matrix[index.get(v)][index.get(u)]=w;list[index.get(v)].push([u,w])}}return {ids,index,matrix,list,edges:g.edges.map(e=>[...e])}}
@@ -41,28 +42,45 @@ function heapLess(a,b){return a[0]<b[0]||(a[0]===b[0]&&a[1]<=b[1])}
 function heapPop(h){const first=h[0],last=h.pop();if(h.length){h[0]=last;let i=0;while(true){let j=2*i+1;if(j>=h.length)break;if(j+1<h.length&&heapLess(h[j+1],h[j]))j++;if(heapLess(h[i],h[j]))break;[h[i],h[j]]=[h[j],h[i]];i=j}}return first}
 
 function trace(g,{algorithm="bfs",kind="list",source=g.vertices[0],target=null,forest=false,order="ascending"}={}){
- const r=representations(g);check(g,source);if(target!==null)check(g,target);if(!["bfs","dfs","recursive","dijkstra"].includes(algorithm)||!["list","matrix"].includes(kind))throw Error("Unknown traversal.");
- if(algorithm==="dijkstra"&&g.edges.some(e=>(e[2]??1)<0))throw Error("Dijkstra requires nonnegative weights.");
- const states=[],seen=new Set(),done=new Set(),parent={},dist={},enter={},exit={},counter={scanned:0,examined:0},frontier=[],visit=[];let clock=0,maxFrontier=0,current=null,edge=null;
- const emit=(line,message)=>{maxFrontier=Math.max(maxFrontier,frontier.length);states.push({line,message,current,edge:edge&&[...edge],seen:[...seen],done:[...done],parent:{...parent},dist:{...dist},enter:{...enter},exit:{...exit},frontier:frontier.map(x=>Array.isArray(x)?[...x]:x),visit:[...visit],scanned:counter.scanned,examined:counter.examined,maxFrontier})};
+ const r=representations(g);check(g,source);if(target!==null)check(g,target);if(!["bfs","dfs","recursive","dijkstra","linear"].includes(algorithm)||!["list","matrix"].includes(kind))throw Error("Unknown traversal.");
+ if(["dijkstra","linear"].includes(algorithm)&&g.edges.some(e=>(e[2]??1)<0))throw Error("Dijkstra requires nonnegative weights.");
+ const states=[],seen=new Set(),done=new Set(),parent={},dist={},enter={},exit={},counter={scanned:0,examined:0},frontier=[],visit=[];let clock=0,maxFrontier=0,current=null,edge=null,relaxation=null,stale=null,selectionScans=0;const rootOf={};
+ const emit=(line,message)=>{maxFrontier=Math.max(maxFrontier,frontier.length);states.push({line,message,current,relaxation:relaxation&&{...relaxation},stale:stale&&[...stale],selectionScans,rootOf:{...rootOf},edge:edge&&[...edge],seen:[...seen],done:[...done],parent:{...parent},dist:{...dist},enter:{...enter},exit:{...exit},frontier:frontier.map(x=>Array.isArray(x)?[...x]:x),visit:[...visit],scanned:counter.scanned,examined:counter.examined,maxFrontier})};
  const neighbors=u=>{const a=readNeighbors(r,u,kind,counter);if(order==="ascending")a.sort((a,b)=>a[0]-b[0]);if(order==="descending")a.sort((a,b)=>b[0]-a[0]);return a};
- const roots=forest&&algorithm!=="dijkstra"?[source,...r.ids.filter(v=>v!==source)]:[source];
+ const roots=forest&&!["dijkstra","linear"].includes(algorithm)?[source,...r.ids.filter(v=>v!==source)]:[source];
  let stopped=false;
- for(const root of roots){if(seen.has(root))continue;seen.add(root);parent[root]=null;dist[root]=0;current=root;edge=null;
+ for(const root of roots){if(seen.has(root))continue;seen.add(root);parent[root]=null;dist[root]=0;rootOf[root]=root;current=root;edge=null;
  if(algorithm==="bfs"){frontier.push(root);emit(0,"Discover root "+root+" and enqueue.");
  if(root===target){stopped=true;break}
- while(frontier.length&&!stopped){current=frontier.shift();const u=current;visit.push(u);emit(1,"Dequeue "+u+".");for(const [v] of neighbors(u)){edge=[u,v];counter.examined++;emit(2,"Examine "+u+" → "+v+".");if(!seen.has(v)){seen.add(v);parent[v]=u;dist[v]=dist[u]+1;frontier.push(v);emit(3,"Discover "+v+", distance "+dist[v]+", enqueue.");if(v===target){stopped=true;break}}}if(!stopped){done.add(u);edge=null;emit(4,"Finish "+u+".")}}}
- else if(algorithm==="dfs"||algorithm==="recursive"){
+ while(frontier.length&&!stopped){current=frontier.shift();const u=current;visit.push(u);emit(1,"Dequeue "+u+".");for(const [v] of neighbors(u)){edge=[u,v];counter.examined++;emit(2,"Examine "+u+" → "+v+".");if(!seen.has(v)){seen.add(v);parent[v]=u;rootOf[v]=root;dist[v]=dist[u]+1;frontier.push(v);emit(3,"Discover "+v+", distance "+dist[v]+", enqueue.");if(v===target){stopped=true;break}}}if(!stopped){done.add(u);edge=null;emit(4,"Finish "+u+".")}}}
+ else if(algorithm==="recursive"){
+ const visitRec=u=>{current=u;visit.push(u);enter[u]=++clock;const adj=neighbors(u);frontier.push([u,0]);emit(0,"Enter recursive call "+u+".");if(u===target){stopped=true;return}
+ for(const [v] of adj){current=u;frontier[frontier.length-1][1]++;edge=[u,v];counter.examined++;emit(2,"Examine "+u+" → "+v+".");if(!seen.has(v)){seen.add(v);parent[v]=u;rootOf[v]=root;dist[v]=dist[u]+1;edge=null;visitRec(v);if(stopped)return}else emit(3,"Already discovered: "+v+".")}
+ current=u;done.add(u);exit[u]=++clock;frontier.pop();edge=null;emit(4,"Return from "+u+".");};
+ visitRec(root);
+ }
+ else if(algorithm==="dfs"){
  const frames=[];const push=u=>{current=u;visit.push(u);enter[u]=++clock;frames.push({u,next:0,adj:neighbors(u)});frontier.push([u,0]);emit(0,"Enter "+u+".")};
- push(root);while(frames.length){const f=frames[frames.length-1];current=f.u;if(f.next===f.adj.length){done.add(f.u);exit[f.u]=++clock;frames.pop();frontier.pop();edge=null;emit(4,"Finish "+f.u+" and backtrack.");continue}
- const [v]=f.adj[f.next++];frontier[frontier.length-1][1]=f.next;edge=[f.u,v];counter.examined++;emit(2,"Examine "+f.u+" → "+v+".");if(!seen.has(v)){seen.add(v);parent[v]=f.u;dist[v]=dist[f.u]+1;edge=null;push(v)}else emit(3,"Already discovered: "+v+".");}}
- else {heapPush(frontier,[0,root]);emit(0,"Push source with distance 0.");while(frontier.length){const [d,u]=heapPop(frontier);current=u;edge=null;if(d!==dist[u]||done.has(u)){emit(1,"Discard stale entry ("+d+", "+u+").");continue}done.add(u);visit.push(u);emit(1,"Settle "+u+" at distance "+d+".");if(u===target){stopped=true;break}for(const [v,w] of neighbors(u)){edge=[u,v];counter.examined++;emit(2,"Relax "+u+" → "+v+" (weight "+w+").");if(d+w<(dist[v]??Infinity)){dist[v]=d+w;parent[v]=u;seen.add(v);heapPush(frontier,[d+w,v]);emit(3,"Improve "+v+" to "+dist[v]+"; push heap entry.");}}}}
+ push(root);if(root===target)stopped=true;while(frames.length&&!stopped){const f=frames[frames.length-1];current=f.u;if(f.next===f.adj.length){done.add(f.u);exit[f.u]=++clock;frames.pop();frontier.pop();edge=null;emit(4,"Finish "+f.u+" and backtrack.");continue}
+ const [v]=f.adj[f.next++];frontier[frontier.length-1][1]=f.next;edge=[f.u,v];counter.examined++;emit(2,"Examine "+f.u+" → "+v+".");if(!seen.has(v)){seen.add(v);parent[v]=f.u;rootOf[v]=root;dist[v]=dist[f.u]+1;edge=null;push(v);if(v===target)stopped=true}else emit(3,"Already discovered: "+v+".");}}
+ else if(algorithm==="linear"){
+ emit(0,"Initialize distance array.");while(true){let u=null,best=Infinity;for(const v of r.ids){selectionScans++;if(!done.has(v)&&(dist[v]??Infinity)<best){best=dist[v];u=v}}if(u===null)break;
+ current=u;edge=null;relaxation=null;done.add(u);visit.push(u);emit(1,"Select minimum unsettled vertex "+u+" at distance "+best+".");if(u===target){stopped=true;break}
+ for(const [v,w] of neighbors(u)){edge=[u,v];counter.examined++;const old=dist[v]??Infinity,candidate=best+w;relaxation={u,v,w,base:best,old,candidate,improved:candidate<old};emit(2,"Compare candidate "+candidate+" with "+(old===Infinity?"∞":old)+".");if(candidate<old){dist[v]=candidate;parent[v]=u;rootOf[v]=root;seen.add(v);emit(3,"Improve "+v+" to "+candidate+".")}else emit(3,"No improvement for "+v+".");relaxation=null}
+ }
+ }
+ else {heapPush(frontier,[0,root]);emit(0,"Push source with distance 0.");while(frontier.length){const [d,u]=heapPop(frontier);current=u;edge=null;relaxation=null;stale=null;if(d!==dist[u]||done.has(u)){stale=[d,u];emit(1,"Discard stale entry ("+d+", "+u+").");stale=null;continue}done.add(u);visit.push(u);emit(1,"Settle "+u+" at distance "+d+".");if(u===target){stopped=true;break}for(const [v,w] of neighbors(u)){edge=[u,v];counter.examined++;const old=dist[v]??Infinity,candidate=d+w;relaxation={u,v,w,base:d,old,candidate,improved:candidate<old};emit(2,"Relax "+u+" → "+v+" (weight "+w+").");if(candidate<old){dist[v]=candidate;parent[v]=u;rootOf[v]=root;seen.add(v);heapPush(frontier,[candidate,v]);emit(3,"Improve "+v+" to "+dist[v]+"; push heap entry.");}else emit(3,"No improvement for "+v+".");relaxation=null;}}}
  if(stopped)break;
  }
- current=null;edge=null;emit(5,stopped?"Target reached; traversal stopped early.":"Execution complete.");return states;
+ current=null;edge=null;relaxation=null;stale=null;emit(5,stopped?"Target reached; traversal stopped early.":"Execution complete.");return states;
 }
 
 function randomGraph(n,p,directed,seed){let s=seed>>>0;const rand=()=>{s=(Math.imul(1664525,s)+1013904223)>>>0;return s/4294967296};const g=graph(Array.from({length:n},(_,i)=>i),[],directed);for(const u of g.vertices)for(const v of g.vertices)if(u!==v&&(directed||u<v)&&rand()<p/100)addEdge(g,u,v);return g}
 
 function treeInfo(g){if(g.directed)return null;const r=representations(g),seen=new Set();let components=0;for(const root of g.vertices){if(seen.has(root))continue;components++;let q=[root];seen.add(root);while(q.length){for(const [v] of r.list[r.index.get(q.pop())])if(!seen.has(v)){seen.add(v);q.push(v)}}}const cycle=g.edges.length>g.vertices.length-components;return {components,cycle,tree:g.vertices.length>0&&components===1&&!cycle}}
-export { graph, addEdge, removeEdge, addVertex, removeVertex, representations, stats, densityModel, operation, pathTo, trace, randomGraph, treeInfo };
+
+function components(g){if(g.directed)throw Error("Connected components here require an undirected graph.");const r=representations(g),seen=new Set(),groups=[];for(const u of r.ids){if(seen.has(u))continue;const a=[],q=[u];seen.add(u);for(let i=0;i<q.length;i++){const v=q[i];a.push(v);for(const [w] of r.list[r.index.get(v)])if(!seen.has(w)){seen.add(w);q.push(w)}}groups.push(a)}return groups}
+function cycleWitness(g){const r=representations(g),active=new Set(),done=new Set(),path=[];let witness=[];function dfs(u,p){active.add(u);path.push(u);for(const [v] of r.list[r.index.get(u)]){if(!g.directed&&v===p&&u!==v)continue;if(active.has(v)){witness=path.slice(path.indexOf(v)).concat(v);return true}if(!done.has(v)&&dfs(v,u))return true}path.pop();active.delete(u);done.add(u);return false}for(const u of r.ids)if(!done.has(u)&&dfs(u,null))break;return witness}
+function topological(g){if(!g.directed)throw Error("Topological order requires a directed graph.");const r=representations(g),indegree=Object.fromEntries(r.ids.map(v=>[v,0])),queue=[],order=[],steps=[];for(const [u,v] of g.edges)indegree[v]++;for(const v of r.ids)if(indegree[v]===0)queue.push(v);const emit=message=>steps.push({message,queue:[...queue],order:[...order],indegree:{...indegree}});emit("Enqueue all zero-indegree vertices.");while(queue.length){const u=queue.shift();order.push(u);emit("Remove "+u+" from queue.");for(const [v] of r.list[r.index.get(u)]){indegree[v]--;if(indegree[v]===0)queue.push(v);emit("Decrease indegree of "+v+".")}}emit(order.length===r.ids.length?"Topological order complete.":"Cycle: remaining vertices cannot be ordered.");return {order,acyclic:order.length===r.ids.length,steps}}
+
+export { components, cycleWitness, topological, graph, updateWeight, addEdge, removeEdge, addVertex, removeVertex, representations, stats, densityModel, operation, pathTo, trace, randomGraph, treeInfo };
