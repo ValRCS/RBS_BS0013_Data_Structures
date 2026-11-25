@@ -1,0 +1,20 @@
+
+.w2-hero{background:var(--hero);padding:1rem;border:1px solid var(--line);border-radius:.8rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:.75rem}
+.w2-hero div,.w2-cell{border:1px solid var(--line);border-radius:.5rem;padding:.7rem;background:var(--surface);min-width:0;overflow-wrap:anywhere}
+.w2-tool{padding:clamp(.75rem,2vw,1.2rem);border:1px solid var(--line);border-radius:.8rem;background:var(--surface);margin:1rem 0;min-width:0}
+.w2-controls{display:flex;flex-wrap:wrap;align-items:end;gap:.5rem;margin:.65rem 0}
+.w2-controls label{display:grid;gap:.2rem;font-size:.9rem;min-width:0}
+.w2-tool button,.w2-tool select{font:inherit;padding:.35rem .55rem;max-width:100%;border:1px solid var(--line);border-radius:.35rem;background:var(--surface);color:var(--text)}
+.w2-tool button:hover{border-color:var(--accent)}.w2-tool button:disabled{opacity:.5;cursor:not-allowed}
+.w2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:.5rem;margin:.6rem 0}
+.w2-cell[data-state=live]{border:2px solid var(--accent)}
+.w2-cell[data-state=dangling],.w2-cell[data-state=dead]{border:2px dashed #c75a5a}
+.w2-cell[data-state=null]{border-style:dotted}
+.w2-feedback{padding:.65rem;border-left:4px solid var(--accent);background:var(--hero);overflow-wrap:anywhere}
+.w2-diagram{width:100%;height:auto;display:block;max-height:360px}
+.w2-history{max-height:12rem;overflow:auto;overflow-wrap:anywhere}
+.w2-metrics{display:flex;flex-wrap:wrap;gap:.5rem}.w2-metrics span{padding:.35rem .6rem;background:var(--hero);border-radius:.4rem}
+.w2-options{display:grid;gap:.5rem}.w2-options label{display:flex;gap:.5rem;align-items:baseline}
+.w2-options input{flex:none}.w2-tool pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.w2-table{width:100%;border-collapse:collapse}.w2-table td,.w2-table th{padding:.35rem;border-bottom:1px solid var(--line);text-align:left;overflow-wrap:anywhere}
+.w2-tool select:focus-visible,.w2-tool input:focus-visible{outline:3px solid var(--focus)}

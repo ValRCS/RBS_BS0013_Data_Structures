@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="../../assets/css/style.css">
   <link rel="stylesheet" href="../../assets/css/visualizations.css">
   <script src="../../assets/js/main.js" defer></script>
+  <link rel="stylesheet" href="../../assets/css/code-examples.css">
+  <link rel="stylesheet" href="memory.css">
+  <script type="module" src="memory.mjs"></script>
+  <script type="module" src="../../assets/js/code-examples.mjs"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -18,11 +22,82 @@
   </div></header>
   <main id="main" class="shell">
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../../index.html">Home</a> / <a href="../../index.html#lessons">Lessons</a> / Week 2</nav>
-<section class="lesson-heading"><p class="eyebrow">Week 2 · Foundations</p><h1>Memory, Pointers and Lifetime</h1><p class="lead">Object lifetime, addresses, ownership and memory errors.</p><p class="status">Overview available · interactive material planned</p></section>
-<nav class="contents" aria-label="On this page"><a href="#focus">Learning focus</a><a href="#interactive">Interactive material</a><a href="#materials">Course materials</a></nav>
-<section id="focus"><h2>Learning focus</h2><p>Trace pointers and distinguish valid objects from dangling references.</p></section>
-<section id="interactive"><h2>Interactive material</h2><div class="panel"><p>The interactive lesson is not yet published. This overview reserves a permanent address for future supplementary material.</p></div></section>
-<section id="materials"><h2>Existing course materials</h2><ul><li><a href="https://github.com/ValRCS/RBS_BS0013_Data_Structures/tree/main/labs/week02">C++ lab and instructions</a></li><li><a href="https://github.com/ValRCS/RBS_BS0013_Data_Structures/blob/main/syllabus/BS0013_Data_Structures_Syllabus_Fall_2026.md">Course syllabus</a></li></ul></section>
+<section class="lesson-heading"><p class="eyebrow">Week 2 · Foundations · Interactive lesson · Version 1</p><h1>Memory, Pointers and Lifetime</h1><p class="lead">From C++ objects to linked data structures: understand what exists, what points to it, and who releases it.</p><div class="w2-hero"><div><strong>Value</strong><br>What is stored?</div><div><strong>Address</strong><br>Where is the object?</div><div><strong>Lifetime</strong><br>Is it still alive?</div><div><strong>Reachability</strong><br>Can this pointer reach it?</div><div><strong>Ownership</strong><br>Who manages release?</div></div><p><strong>Essential path:</strong> explore sections 1–8 in about 45 minutes; examples and extra presets are optional. These browser models simulate selected semantics, not C++ execution. No student data is sent; self-check progress is local.</p></section>
+<nav class="contents" aria-label="On this page"><a href="#objects">1. Objects</a><a href="#pointers">2. Pointers</a><a href="#lifetime">3. Lifetime</a><a href="#dynamic">4. Dynamic memory</a><a href="#detective">5. Error detective</a><a href="#chain">6. Node chains</a><a href="#diagnostics">7. Diagnostics</a><a href="#practice">8. Self-check</a><a href="#cpp">C++ examples</a><a href="#materials">Lab and references</a></nav>
+<noscript><p>JavaScript is disabled. Read the explanations and expandable C++ examples; the simulations require JavaScript.</p></noscript>
+<section id="objects"><h2>1. Objects and addresses</h2><p>An object has a type, value, storage and lifetime. Equal values can belong to distinct objects. <code>&amp;x</code> obtains an address; <code>sizeof(x)</code> measures the object's size in bytes, not the amount of dynamic storage it may own. The following addresses are symbolic; separate local variables need not have consecutive addresses.</p><div class="w2-tool" id="objects-tool"></div><details><summary>Prediction: if two integers store the same number, are they the same object?</summary><p>No. Identity and value are separate.</p></details></section>
+<section id="pointers"><h2>2. Pointer playground</h2><p>A pointer is itself an object containing a pointer value. <code>int* p = &amp;a;</code> stores an address; <code>*p</code> designates the target. A pointer can be copied or reassigned, unlike a reference binding. Assignment through a reference changes the referred-to object.</p><p>Choose a preset and predict each effect before stepping, or manipulate the two pointers freely. Solid links designate live objects; dashed links indicate expired targets. The diagram and text both show state.</p><div class="w2-tool" id="pointers-tool"></div></section>
+<section id="lifetime"><h2>3. Lifetime simulator</h2><p>Automatic objects normally end their lifetimes when their block exits. Dynamically allocated objects have a separate lifetime. An external raw pointer does not keep its target alive. The simulator retains a symbolic record of expired objects, not a real valid address. It blocks invalid operations rather than executing undefined behavior.</p><p>Load Nested scope, step into the block, declare an int, read it, then leave the scope. Predict the next read. The two pointer variables remain in the outer scope throughout this model.</p><div class="w2-tool" id="lifetime-tool"></div></section>
+<section id="dynamic"><h2>4. Dynamic memory laboratory</h2><p><code>new int{42}</code> creates a dynamic object; compatible <code>delete</code> releases it. Pointer reassignment does not release storage. Deletion through a valid pointer to a compatible allocation ends the object's lifetime but does not null aliases. Deleting nullptr is harmless.</p><p>Ownership is a programmer-assigned responsibility, not a property enforced by raw pointers. This closed model counts a live allocation with no pointer to it as unreachable. A live allocation may still be reachable but have no designated owner. Addresses are never reused here to keep identity visible.</p><div class="w2-tool" id="dynamic-tool"></div><details><summary>Why not implement all ownership manually in production?</summary><p>RAII associates resource management with object lifetime. Week 3 introduces resource-owning classes and dynamic arrays; later weeks build on that model.</p></details></section>
+<section id="detective"><h2>5. Memory error detective</h2><p>Identify the broken lifetime, access or ownership condition and choose a repair. Each scenario is an independent formative example, not an assessed lab solution.</p><div class="w2-tool" id="detective-tool"></div></section>
+<section id="chain"><h2>6. Node chain playground</h2><pre><code>struct Node {
+    int value;
+    Node* next = nullptr;
+};</code></pre><p>Links store pointer values, not copies of payloads. These are modeled automatic nodes with non-owning links. Change next or head, or select a new current pointer. Ending a lifetime is a symbolic external event, not delete. Try a disconnected node and compare live versus reachable counts. The Shared suffix preset lets you compare traversal starting at A and D.</p><div class="w2-tool" id="chain-tool"></div><p>For a valid null-terminated chain of n nodes, ordinary iterative traversal costs Θ(n) time and Θ(1) auxiliary space. The node storage itself is not auxiliary traversal storage. The simulator separately tracks visited identities to stop cycles and dangling links; that diagnostic bookkeeping is not part of the modeled ordinary traversal.</p></section>
+<section id="diagnostics"><h2>7. Debugger and sanitizer workshop</h2><p>These simplified illustrative AddressSanitizer reports omit platform-specific detail. Identify the invalid access, allocation and release locations. A debugger can inspect live state; neither a normal-looking output nor a clean sanitizer run proves correctness.</p><div class="w2-tool" id="diagnostic-tool"></div><pre><code>g++ -std=c++20 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer examples/unsafe/use-after-free.cpp -o demo
+./demo</code></pre><p>Run deliberately unsafe demos only in an isolated lab process. They are not normal passing programs. See <a href="examples/README.md">example instructions</a> and the actual Week 2 lab.</p></section>
+<section id="practice"><h2>8. Knowledge self-check</h2><p>Thirty independent formative questions with immediate explanations. Progress persists in this browser only; it is not a Moodle submission. Reset to practise again.</p><div class="w2-tool" id="quiz-tool"></div></section>
+<section id="cpp"><h2>Optional C++20 implementation notes</h2><div class="cpp-toolbar"><p>Ten independent examples; compile and run each separately.</p><div class="cpp-actions" data-cpp-controls hidden><button type="button" data-cpp-expand>Expand all C++ notes</button><button type="button" data-cpp-collapse>Collapse all C++ notes</button></div></div><details class="cpp-example" id="cpp-object-addresses"><summary>Separate objects and symbolic vs real addresses <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Shows two equal values and distinct addresses; actual addresses vary.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int a=7,b=7; std::cout &lt;&lt; a &lt;&lt; ' ' &lt;&lt; b &lt;&lt; ' ' &lt;&lt; (&amp;a != &amp;b) &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/object-addresses.cpp">Open source</a> · Expected output: <code>7 7 1</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-pointer-basics"><summary>Address-of and dereference <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>The write changes the designated object.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int x=11; int* p=&amp;x; *p=19; std::cout &lt;&lt; x &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/pointer-basics.cpp">Open source</a> · Expected output: <code>19</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-pointer-aliasing"><summary>Independent pointer objects <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Reassignment changes one pointer, not its alias.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int a=6,b=8; int* p=&amp;a; int* q=p; p=&amp;b; *q=14; std::cout &lt;&lt; *p &lt;&lt; ' ' &lt;&lt; a &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/pointer-aliasing.cpp">Open source</a> · Expected output: <code>8 14</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-references-vs-pointers"><summary>Reference binding versus pointer reseating <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Reference assignment modifies its original target.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int a=1,b=9; int&amp; r=a; int* p=&amp;a; r=b; p=&amp;b; *p=4; std::cout &lt;&lt; a &lt;&lt; ' ' &lt;&lt; b &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/references-vs-pointers.cpp">Open source</a> · Expected output: <code>9 4</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-scope-lifetime"><summary>Safe scope observation <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Reset the observer before its target dies.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int* p=nullptr; { int x=23; p=&amp;x; std::cout &lt;&lt; *p &lt;&lt; '\n'; p=nullptr; } std::cout &lt;&lt; (p==nullptr) &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/scope-lifetime.cpp">Open source</a> · Expected output: <code>23 1</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-dynamic-allocation"><summary>Controlled scalar allocation <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Exactly one compatible release.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int* p=new int{13}; std::cout &lt;&lt; *p &lt;&lt; '\n'; delete p; p=nullptr; std::cout &lt;&lt; (p==nullptr) &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/dynamic-allocation.cpp">Open source</a> · Expected output: <code>13 1</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-ownership-responsibility"><summary>Owner and observer <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Only the designated responsible pointer releases; observer stops use first.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    int* owner=new int{31}; int* observer=owner; std::cout &lt;&lt; *observer &lt;&lt; '\n'; observer=nullptr; delete owner; owner=nullptr;
+}
+</code></pre></div><p><a href="examples/ownership-responsibility.cpp">Open source</a> · Expected output: <code>31</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-node-chain"><summary>Non-owning links <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Automatic nodes are not deleted through next.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    struct Node { int value; Node* next=nullptr; }; Node a{4},b{9}; a.next=&amp;b; std::cout &lt;&lt; a.next-&gt;value &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/node-chain.cpp">Open source</a> · Expected output: <code>9</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-node-traversal"><summary>Linear traversal <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Time Θ(n); auxiliary traversal storage Θ(1).</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    struct Node { int value; Node* next=nullptr; }; Node a{2},b{5},c{8}; a.next=&amp;b; b.next=&amp;c; int sum=0; for(const Node* cur=&amp;a;cur;cur=cur-&gt;next) sum+=cur-&gt;value; std::cout &lt;&lt; sum &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/node-traversal.cpp">Open source</a> · Expected output: <code>15</code> (whitespace normalized).</p></div></details>
+<details class="cpp-example" id="cpp-node-rewiring"><summary>Reachability is not lifetime <span class="cpp-meta">C++20 · standalone</span></summary><div class="cpp-body"><p>Skipped node still exists.</p><div class="cpp-code"><pre><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    struct Node { int value; Node* next=nullptr; }; Node a{3},b{6},c{9}; a.next=&amp;b; b.next=&amp;c; a.next=&amp;c; std::cout &lt;&lt; a.next-&gt;value &lt;&lt; ' ' &lt;&lt; b.value &lt;&lt; '\n';
+}
+</code></pre></div><p><a href="examples/node-rewiring.cpp">Open source</a> · Expected output: <code>9 6</code> (whitespace normalized).</p></div></details><p><a href="examples/README.md">Compilation instructions and unsafe diagnostics</a></p></section>
+<section id="materials"><h2>Practical work and references</h2><p>Use your existing fork and Codespace. This interactive companion does not replace the C++ lab or the official assessment.</p><p><a href="https://github.com/ValRCS/RBS_BS0013_Data_Structures/tree/main/labs/week02">Week 2 lab and instructions</a> · <a href="https://github.com/ValRCS/RBS_BS0013_Data_Structures/tree/main/lectures/week02">Lecture materials</a> · <a href="https://en.cppreference.com/w/cpp/language/pointer">C++ pointers</a> · <a href="https://en.cppreference.com/w/cpp/language/lifetime">Object lifetime</a> · <a href="https://clang.llvm.org/docs/AddressSanitizer.html">AddressSanitizer</a></p><p>Week 3 turns ownership into a resource-owning dynamic array. Week 4 turns node links into a list with structural invariants.</p></section>
 <nav class="lesson-navigation" aria-label="Adjacent lessons"><a href="../01-cpp-foundations/index.html">← Week 1: C++ Foundations</a><a href="../03-dynamic-arrays/index.html">Week 3: Arrays and Dynamic Arrays →</a></nav></main>
   <footer class="site-footer"><div class="shell">BS0013 · Riga Business School, Riga Technical University · 2026/2027 · <a href="https://github.com/ValRCS/RBS_BS0013_Data_Structures">Student repository</a> · <a href="https://github.com/ValRCS/RBS_BS0013_Data_Structures/blob/main/syllabus/BS0013_Data_Structures_Syllabus_Fall_2026.md">Syllabus</a></div></footer>
 </body>
